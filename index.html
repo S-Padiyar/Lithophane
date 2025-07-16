@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Litho3D | Next-Gen Lithophanes</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <style>
     /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
       VARIABLES 
@@ -25,6 +26,8 @@
       --transition-slow: 0.5s;
       --shadow-light: rgba(0,0,0,0.08);
       --shadow-strong: rgba(0,0,0,0.2);
+      --success: #2ecc71;
+      --error: #e74c3c;
     }
 
     /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
@@ -57,6 +60,29 @@
     }
 
     /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
+      NOTIFICATION 
+    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
+    .notification {
+      position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+      padding: 0.8rem 1.6rem; border-radius: var(--radius);
+      font-family: 'Montserrat', sans-serif; font-size: 0.9rem;
+      color: #fff; z-index: 3000; display: none;
+      box-shadow: 0 4px 12px var(--shadow-strong);
+      transition: opacity var(--transition-fast) ease-in-out, transform var(--transition-fast) ease-in-out;
+    }
+    .notification.success {
+      display: block; background: var(--success);
+      opacity: 1; transform: translateX(-50%) translateY(0);
+    }
+    .notification.error {
+      display: block; background: var(--error);
+      opacity: 1; transform: translateX(-50%) translateY(0);
+    }
+    .notification.hide {
+      opacity: 0; transform: translateX(-50%) translateY(-20px);
+    }
+
+    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
       NAVBAR 
     –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
     header {
@@ -73,10 +99,10 @@
     }
     .logo {
       color: #fff; font-size: 1.5rem; font-weight: 600;
-      margin-left: 3rem; /* Increased to move logo further left */
+      margin-left: 3rem;
     }
     .nav-links {
-      list-style: none; display: flex; gap: var(--gap);
+      list-style: none; display: flex; gap: var(--gap); align-items: center;
     }
     .nav-links li {
       position: relative;
@@ -105,6 +131,22 @@
       transform: translateY(-2px) scale(1.05);
       box-shadow: 0 8px 16px var(--shadow-strong);
       background: var(--cta-dark);
+    }
+    .cart-btn {
+      position: relative; display: flex; align-items: center;
+      padding: 0.5rem; cursor: pointer;
+    }
+    .cart-btn svg {
+      width: 24px; height: 24px; fill: #fff;
+      transition: fill var(--transition-fast);
+    }
+    .cart-btn:hover svg { fill: var(--accent); }
+    .cart-count {
+      position: absolute; top: -4px; right: -4px;
+      background: var(--cta); color: #fff;
+      border-radius: 50%; font-size: 0.75rem;
+      width: 18px; height: 18px; line-height: 18px;
+      text-align: center;
     }
 
     /* HAMBURGER (MOBILE) */
@@ -145,6 +187,51 @@
       0% { transform: translateX(100%); }
       60% { transform: translateX(-10px); }
       100% { transform: translateX(0); }
+    }
+
+    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
+      CART MODAL 
+    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
+    .cart-modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); display: none; align-items: center;
+      justify-content: center; z-index: 2000;
+    }
+    .cart-modal.active { display: flex; }
+    .cart-content {
+      background: var(--white); padding: 2rem; border-radius: var(--radius);
+      max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;
+      box-shadow: 0 4px 12px var(--shadow-strong);
+    }
+    .cart-content h2 {
+      font-family: 'Montserrat', sans-serif; font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .cart-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.5rem 0; border-bottom: 1px solid #eee;
+    }
+    .cart-item:last-child { border-bottom: none; }
+    .cart-item button {
+      background: var(--cta); color: #fff; border: none;
+      padding: 0.4rem 0.8rem; border-radius: var(--radius);
+      cursor: pointer; font-family: 'Montserrat', sans-serif;
+    }
+    .cart-total {
+      font-weight: 600; margin-top: 1rem; text-align: right;
+    }
+    .cart-buttons {
+      display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1rem;
+    }
+    .cart-buttons button {
+      padding: 0.6rem 1.2rem; border-radius: var(--radius);
+      cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 600;
+    }
+    .cart-buttons .close-cart {
+      background: #ccc; color: var(--text);
+    }
+    .cart-buttons .checkout {
+      background: var(--accent); color: #fff;
     }
 
     /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
@@ -377,6 +464,17 @@
     .contact-form button:hover::before {
       left: 100%;
     }
+    .form-message {
+      text-align: center; padding: 0.8rem; border-radius: var(--radius);
+      margin-top: 1rem; display: none; font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+    }
+    .form-message.success {
+      display: block; background: var(--success); color: #fff;
+    }
+    .form-message.error {
+      display: block; background: var(--error); color: #fff;
+    }
 
     /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
       FOOTER 
@@ -390,6 +488,8 @@
   </style>
 </head>
 <body>
+  <!-- NOTIFICATION -->
+  <div class="notification" id="notification"></div>
 
   <!-- NAVBAR -->
   <header>
@@ -401,6 +501,14 @@
         <li><a href="#gallery">Gallery</a></li>
         <li><a href="#shop" class="cta">Buy Now</a></li>
         <li><a href="#contact">Contact</a></li>
+        <li>
+          <div class="cart-btn">
+            <svg viewBox="0 0 24 24">
+              <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 21.96 4H5.21L4.27 2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+            </svg>
+            <span class="cart-count">0</span>
+          </div>
+        </li>
       </ul>
       <div class="hamburger">
         <div class="bar"></div>
@@ -409,6 +517,19 @@
       </div>
     </nav>
   </header>
+
+  <!-- CART MODAL -->
+  <div class="cart-modal">
+    <div class="cart-content">
+      <h2>Your Cart</h2>
+      <div class="cart-items"></div>
+      <div class="cart-total">Total: $0.00</div>
+      <div class="cart-buttons">
+        <button class="close-cart">Close</button>
+        <button class="checkout">Checkout</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ABOUT -->
   <section id="about" class="scroll-reveal">
@@ -481,7 +602,7 @@
           <h3>Standard</h3>
           <p>Our 4×6" curved lithophane is designed to fit any LED base, offering a timeless way to display your favorite photo with stunning clarity and depth.</p>
           <p><strong>$29.99</strong></p>
-          <button class="btn">Add to Cart</button>
+          <button class="btn" data-product="Standard" data-price="29.99">Add to Cart</button>
         </div>
       </div>
       <div class="product-card scroll-reveal">
@@ -490,7 +611,7 @@
           <h3>Framed</h3>
           <p>This 5×7" lithophane comes in a sleek black or white frame, ready to hang or display on a stand, adding elegance to any space.</p>
           <p><strong>$49.99</strong></p>
-          <button class="btn">Add to Cart</button>
+          <button class="btn" data-product="Framed" data-price="49.99">Add to Cart</button>
         </div>
       </div>
       <div class="product-card scroll-reveal">
@@ -499,7 +620,7 @@
           <h3>Custom</h3>
           <p>Create a one-of-a-kind lithophane with your choice of size, shape, and border. Preview your design in real-time before we craft it to perfection.</p>
           <p><strong>$59.99</strong></p>
-          <button class="btn">Add to Cart</button>
+          <button class="btn" data-product="Custom" data-price="59.99">Add to Cart</button>
         </div>
       </div>
     </div>
@@ -509,11 +630,12 @@
   <section id="contact" class="scroll-reveal">
     <h2>Contact</h2>
     <p>Have questions about bulk orders, custom designs, materials, or shipping? Our dedicated team is here to provide personalized support and answer any inquiries to ensure your experience is exceptional.</p>
-    <form class="contact-form scroll-reveal">
-      <input type="text" placeholder="Your Name" required>
-      <input type="email" placeholder="Your Email" required>
-      <textarea rows="5" placeholder="Your Message" required></textarea>
+    <form class="contact-form scroll-reveal" action="https://formspree.io/f/xblkjkpg" method="POST">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <textarea rows="5" name="message" placeholder="Your Message" required></textarea>
       <button class="btn" type="submit">Send Message</button>
+      <div class="form-message"></div>
     </form>
   </section>
 
@@ -525,6 +647,7 @@
 
   <!-- SCRIPT -->
   <script>
+    // Hamburger menu
     const ham = document.querySelector('.hamburger');
     const nav = document.querySelector('.nav-links');
     ham.addEventListener('click', () => {
@@ -555,8 +678,133 @@
         }
       });
     }, { threshold: 0.1 });
-
     scrollElements.forEach(el => observer.observe(el));
+
+    // Notification function
+    function showNotification(message, type) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = `notification ${type}`;
+      setTimeout(() => {
+        notification.className = 'notification hide';
+        setTimeout(() => {
+          notification.className = 'notification';
+          notification.textContent = '';
+        }, 300);
+      }, 3000);
+    }
+
+    // Cart functionality
+    const cart = {
+      items: [],
+      addItem(product, price) {
+        this.items.push({ product, price: parseFloat(price) });
+        this.updateCart();
+      },
+      removeItem(index) {
+        this.items.splice(index, 1);
+        this.updateCart();
+      },
+      getTotal() {
+        return this.items.reduce((total, item) => total + item.price, 0).toFixed(2);
+      },
+      updateCart() {
+        const cartCount = document.querySelector('.cart-count');
+        const cartItems = document.querySelector('.cart-items');
+        const cartTotal = document.querySelector('.cart-total');
+        cartCount.textContent = this.items.length;
+        cartItems.innerHTML = '';
+        this.items.forEach((item, index) => {
+          const itemElement = document.createElement('div');
+          itemElement.classList.add('cart-item');
+          itemElement.innerHTML = `
+            <span>${item.product} - $${item.price.toFixed(2)}</span>
+            <button onclick="cart.removeItem(${index})">Remove</button>
+          `;
+          cartItems.appendChild(itemElement);
+        });
+        cartTotal.textContent = `Total: $${this.getTotal()}`;
+        localStorage.setItem('cart', JSON.stringify(this.items));
+      }
+    };
+
+    // Load cart from localStorage
+    if (localStorage.getItem('cart')) {
+      cart.items = JSON.parse(localStorage.getItem('cart'));
+      cart.updateCart();
+    }
+
+    // Add to cart buttons
+    document.querySelectorAll('.product-info button').forEach(button => {
+      button.addEventListener('click', () => {
+        const product = button.getAttribute('data-product');
+        const price = button.getAttribute('data-price');
+        cart.addItem(product, price);
+        showNotification(`${product} added to cart!`, 'success');
+      });
+    });
+
+    // Cart modal
+    const cartBtn = document.querySelector('.cart-btn');
+    const cartModal = document.querySelector('.cart-modal');
+    const closeCart = document.querySelector('.close-cart');
+    const checkoutBtn = document.querySelector('.checkout');
+
+    cartBtn.addEventListener('click', () => {
+      cartModal.classList.toggle('active');
+    });
+
+    closeCart.addEventListener('click', () => {
+      cartModal.classList.remove('active');
+    });
+
+    checkoutBtn.addEventListener('click', () => {
+      if (cart.items.length === 0) {
+        showNotification('Your cart is empty!', 'error');
+      } else {
+        showNotification('Proceeding to checkout (this is a demo, so no actual payment processing is implemented).', 'success');
+        cart.items = [];
+        cart.updateCart();
+        cartModal.classList.remove('active');
+      }
+    });
+
+    // Formspree form submission
+    const contactForm = document.querySelector('.contact-form');
+    const formMessage = document.querySelector('.form-message');
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(contactForm);
+      try {
+        const response = await fetch('https://formspree.io/f/xblkjkpg', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+        if (response.ok) {
+          formMessage.textContent = 'Message sent successfully!';
+          formMessage.className = 'form-message success';
+          contactForm.reset();
+          setTimeout(() => {
+            formMessage.className = 'form-message';
+          }, 3000);
+        } else {
+          formMessage.textContent = 'There was an error sending your message. Please try again.';
+          formMessage.className = 'form-message error';
+          setTimeout(() => {
+            formMessage.className = 'form-message';
+          }, 3000);
+        }
+      } catch (error) {
+        formMessage.textContent = 'There was an error sending your message. Please try again.';
+        formMessage.className = 'form-message error';
+        setTimeout(() => {
+          formMessage.className = 'form-message';
+        }, 3000);
+      }
+    });
   </script>
 </body>
 </html>
