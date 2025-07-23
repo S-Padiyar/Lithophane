@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Litho3D | Preview Tool</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css" />
+  <script src="https://unpkg.com/three@0.154.0/build/three.min.js"></script>
+  <style>
+    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
+      VARIABLES 
+    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
+    :root {
+      --dark-bg: #1e272e;
+      --light-bg: #f1f2f6;
+      --white: #ffffff;
+      --accent: #34ace0;
+      --accent-dark: #227093;
+      --cta: #ff6b6b;
+      --cta-dark: #ee5253;
+      --text: #2f3542;
+      --text-light: #555;
+      --radius: 12px;
+      --gap: 24px;
+      --transition-fast: 0.25s;
+      --transition-slow: 0.5s;
+      --shadow-light: rgba(0,0,0,0.08);
+      --shadow-strong: rgba(0,0,0,0.2);
+      --success: #2ecc71;
+      --error: #e74c3c;
+    }
+
+    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
+      RESET & BASE 
+    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--light-bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-top: 70px;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
+      NOTIFICATION 
+    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
+    .notification {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.8rem 1.6rem;
+      border-radius: var(--radius);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      color: #fff;
+      z-index: 3000;
+      display: none;
+      box-shadow: 0 4px 12px var(--shadow-strong);
+      transition: opacity var(--transition-fast) ease-in-out, transform var(--transition-fast) ease-in-out;
+    }
+    .notification.success {
+      display: block;
+      background: var(--success);
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .notification.error {
+      display: block;
+      background: var(--error);
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .notification.hide {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-20px);
+    }
+
+    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
+      NAVBAR 
+    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(90deg, var(--dark-bg), var(--accent-dark));
+      box-shadow: 0 4px 12px var(--shadow-strong);
+      z-index: 1000;
+    }
+    .navbar {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem var(--gap);
+      font-family: 'Montserrat', sans-serif;
+    }
+    .logo {
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-left: 3rem;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: var(--gap);
+      align-items: center;
+    }
+    .nav-links li {
+      position: relative;
+    }
+    .nav-links a {
+      color: #fff;
+      padding: 0.5rem 0;
+      font-weight: 500;
+      transition: color var(--transition-fast);
+    }
+    .nav-links a:not(.cta)::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width var(--transition-fast);
+    }
+    .nav-links a:not(.cta):hover {
+      color: var(--accent);
+    }
+    .nav-links a:not(.cta):hover::after {
+      width: 100%;
+    }
+    .nav-links .cta {
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      background: var(--cta);
+      box-shadow: 0 4px 8px var(--shadow-strong);
+      transition: transform var(--transition-fast) ease-in-out, box-shadow var(--transition-fast) ease-in-out, background var(--transition-fast);
+    }
+    .nav-links .cta:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 8px 16px var(--shadow-strong);
+      background: var(--cta-dark);
+    }
+    .cart-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+    .cart-btn svg {
+      width: 24px;
+      height: 24px;
+      fill: #fff;
+      transition: fill var(--transition-fast);
+    }
+    .cart-btn:hover svg { fill: var(--accent); }
+    .cart-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--cta);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 0.75rem;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
+      text-align: center;
+    }
+
+    /* HAMBURGER (MOBILE) */
+    .hamburger {
+      display: none;
+      cursor: pointer;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .bar {
+      width: 28px;
+      height: 3px;
+      background: #fff;
+      border-radius: 3px;
+      transition: all var(--transition-fast) ease-in-out;
+    }
+    @media(max-width:768px) {
+      .nav-links {
+        position: absolute;
+        top: 64px;
+        left: 0;
+        background: var(--dark-bg);
+        flex-direction: column;
+        width: 100%;
+        padding: 1.5rem;
+        display: none;
+        transform: translateX(100%);
+        transition: transform var(--transition-fast) ease-in-out;
+      }
+      .nav-links.active {
+        display: flex;
+        transform: translateX(0);
+        animation: bounceIn 0.4s ease-out;
+      }
+      .hamburger { display: flex; }
+      .hamburger.active .bar:nth-child(1) {
+        transform: rotate(45deg) translate(6px, 6px);
+        background: var(--accent);
+      }
+      .hamburger.active .bar:nth-child(2) {
+        transform: scale(0.1) rotate(360deg);
+        opacity: 0;
+      }
+      .hamburger.active .bar:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
+        background: var(--accent);
+      }
+    }
+    @keyframes bounceIn {
+      0% { transform: translateX(100%); }
+      60% { transform: translateX(-10px); }
+      100% { transform: translateX(0); }
+    }
+
+    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
+      CART MODAL 
+    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
+    .cart-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .cart-modal.active { display: flex; }
+    .cart-content {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--radius);
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 4px 12px var(--shadow-strong);
+    }
+    .cart-content h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+    }
+    .cart-item:last-child { border-bottom: none; }
+    .cart-item button {
+      background: var(--cta);
+      color: #fff;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .cart-total {
+      font-weight: 600;
+      margin-top: 1rem;
+      text-align: right;
+    }
+    .cart-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 1rem;
+    }
+    .cart-buttons button {
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+    }
+    .cart-buttons .close-cart {
+      background: #ccc;
+      color: var(--text);
+    }
+    .cart-buttons .checkout {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
+      SECTION STYLES 
+    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
+    section {
+      padding: 100px var(--gap) 60px;
+      background: var(--white);
+    }
+    h1 {
+      text-align: center;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.25rem;
+      font-weight: 600;
+      color: var(--text);
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+    h1::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: var(--accent);
+      margin: 8px auto 0;
+      border-radius: 2px;
+    }
+    p {
+      max-width: 700px;
+      margin: 1rem auto 2rem;
+      color: var(--text-light);
+      text-align: center;
+    }
+
+    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
+      PREVIEW TOOL STYLES 
+    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--gap);
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px var(--shadow-light);
+    }
+    .upload-container {
+      width: 100%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    input[type="file"] {
+      padding: 0.8rem;
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      transition: border var(--transition-fast), box-shadow var(--transition-fast);
+      background: var(--white);
+      cursor: pointer;
+    }
+    input[type="file"]:focus {
+      border-color: var(--accent);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(52,172,224,0.2);
+    }
+    select#productOption {
+      padding: 0.8rem;
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      background: var(--white);
+      cursor: pointer;
+      transition: border var(--transition-fast), box-shadow var(--transition-fast);
+      width: 100%;
+      max-width: 300px;
+    }
+    select#productOption:focus {
+      border-color: var(--accent);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(52,172,224,0.2);
+    }
+    .frame-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+    }
+    input[type="checkbox"] {
+      width: 1.2rem;
+      height: 1.2rem;
+      cursor: pointer;
+    }
+    img#preview {
+      max-width: 100%;
+      border: 2px solid #ddd;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px var(--shadow-light);
+      margin-top: 1rem;
+    }
+    canvas#resultCanvas {
+      max-width: 100%;
+      border: 2px solid #ccc;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px var(--shadow-light);
+      margin-top: 1rem;
+    }
+    canvas#threeCanvas {
+      max-width: 100%;
+      border: 2px solid #ccc;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px var(--shadow-light);
+      margin-top: 1rem;
+    }
+    .btn {
+      display: inline-block;
+      position: relative;
+      padding: 0.6rem 1.4rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      color: #fff;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: linear-gradient(45deg, var(--accent), var(--accent-dark));
+      box-shadow: 0 4px 8px var(--shadow-strong);
+      transition: transform var(--transition-fast) ease-in-out, box-shadow var(--transition-fast) ease-in-out, background var(--transition-fast) ease-in-out;
+      z-index: 1;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px var(--shadow-strong), 0 0 10px rgba(52,172,224,0.3);
+      background: linear-gradient(45deg, var(--accent-dark), var(--accent));
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left var(--transition-slow) ease-in-out;
+      z-index: -1;
+    }
+    .btn:hover::before {
+      left: 100%;
+    }
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      width: 100%;
+    }
+
+    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
+      FOOTER 
+    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
+    footer {
+      background: var(--dark-bg); 
+      color: #ccc;
+      text-align: center; 
+      padding: 1.5rem var(--gap);
+      font-size: 0.9rem;
+    }
+
+    footer p {
+      color: #ccc;
+      font-size: 0.9rem;
+      margin: 0;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    footer a { 
+      color: var(--accent); 
+    }
+
+
+  </style>
+</head>
+<body>
+  <!-- NOTIFICATION -->
+  <div class="notification" id="notification"></div>
+
+  <!-- NAVBAR -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">Litho3D</div>
+      <ul class="nav-links">
+        <li><a href="/index.html#about">About</a></li>
+        <li><a href="/index.html#process">Process</a></li>
+        <li><a href="/index.html#gallery">Gallery</a></li>
+        <li><a href="/index.html#shop" class="cta">Buy Now</a></li>
+        <li><a href="/index.html#contact">Contact</a></li>
+        <li>
+          <div class="cart-btn">
+            <svg viewBox="0 0 24 24">
+              <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 21.96 4H5.21L4.27 2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+            </svg>
+            <span class="cart-count">0</span>
+          </div>
+        </li>
+      </ul>
+      <div class="hamburger">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- CART MODAL -->
+  <div class="cart-modal">
+    <div class="cart-content">
+      <h2>Your Cart</h2>
+      <div class="cart-items"></div>
+      <div class="cart-total">Total: $0.00</div>
+      <div class="cart-buttons">
+        <button class="close-cart">Close</button>
+        <button class="checkout">Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PREVIEW TOOL -->
+  <section id="preview-tool" class="scroll-reveal">
+    <h1>Litho3D - Preview Your Lithophane</h1>
+    <p>Upload your photo, select a product option, and preview your custom lithophane in real-time. Adjust the crop to match the product size and download the STL file for Cura.</p>
+    <div class="container">
+      <div class="upload-container">
+        <select id="productOption">
+          <option value="standard" data-aspect="0.6667" data-width="4" data-height="6" data-price="29.99">Standard (4×6", $29.99)</option>
+          <option value="framed" data-aspect="0.7143" data-width="5" data-height="7" data-price="49.99">Framed (5×7", $49.99)</option>
+          <option value="custom" data-aspect="0.75" data-width="6" data-height="8" data-price="59.99">Custom (6×8", $59.99)</option>
+        </select>
+        <div class="frame-option">
+          <input type="checkbox" id="addFrame" name="addFrame">
+          <label for="addFrame">Add Frame to Lithophane</label>
+        </div>
+        <input type="file" id="upload" accept="image/*" />
+      </div>
+      <div>
+        <img id="preview" />
+      </div>
+      <div class="button-group">
+        <button class="btn" onclick="showCroppedResult()">Generate Preview</button>
+        <button class="btn" onclick="downloadSTL()">Download STL</button>
+      </div>
+      <canvas id="resultCanvas"></canvas>
+      <canvas id="threeCanvas"></canvas>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Litho3D. All rights reserved.</p>
+    <p>Email: <a href="mailto:sunmayp@gmail.com">sunmayp@gmail.com</a> | Phone: (240) 810-5647</p>
+  </footer>
+
+  <script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
+  <script>
+    let cropper;
+    let imageData;
+    let selectedProduct = 'standard';
+    let scene, camera, renderer, mesh;
+
+    // Product options configuration
+    const productOptions = {
+      standard: { aspectRatio: 4/6, width: 4, height: 6, price: 29.99, previewWidth: 600, previewHeight: 900 },
+      framed: { aspectRatio: 5/7, width: 5, height: 7, price: 49.99, previewWidth: 600, previewHeight: 840 },
+      custom: { aspectRatio: 6/8, width: 6, height: 8, price: 59.99, previewWidth: 600, previewHeight: 800 }
+    };
+
+    // Initialize Three.js scene
+    function initThreeJS() {
+      const canvas = document.getElementById('threeCanvas');
+      canvas.width = 600;
+      canvas.height = 600; // Square canvas for 3D view
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(75, canvas.width / canvas.height, 0.1, 1000);
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+      renderer.setClearColor(0xf1f2f6);
+
+      // Enhanced lighting for better depth visualization
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
+      directionalLight.position.set(1, 1, 1).normalize();
+      scene.add(directionalLight);
+      const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+      scene.add(ambientLight);
+      const pointLight = new THREE.PointLight(0xffffff, 0.5, 100);
+      pointLight.position.set(0, 0, 50);
+      scene.add(pointLight);
+
+      camera.position.set(0, 0, 50);
+      camera.lookAt(0, 0, 0);
+
+      // Start animation loop
+      function animate() {
+        requestAnimationFrame(animate);
+        if (mesh) {
+          mesh.rotation.y += 0.01;
+        }
+        renderer.render(scene, camera);
+      }
+      animate();
+    }
+
+    // Update 3D visualization
+    function update3DVisualization() {
+      if (!imageData) {
+        showNotification('No image data available for 3D visualization!', 'error');
+        return;
+      }
+
+      const { width, height, previewWidth, previewHeight } = productOptions[selectedProduct];
+      const addFrame = document.getElementById('addFrame').checked;
+      const frameThickness = addFrame ? 5 : 0; // 5mm frame thickness
+      const canvasWidth = imageData.width;
+      const canvasHeight = imageData.height;
+      const scaleX = ((width * 25.4) + (frameThickness * 2)) / canvasWidth; // Include frame in dimensions
+      const scaleY = ((height * 25.4) + (frameThickness * 2)) / canvasHeight;
+      const maxHeight = 2; // Reduced max height for smoother lithophane
+
+      // Remove existing mesh
+      if (mesh) {
+        scene.remove(mesh);
+        mesh.geometry.dispose();
+        mesh.material.dispose();
+      }
+
+      // Create geometry
+      const geometry = new THREE.BufferGeometry();
+      const vertices = [];
+      const indices = [];
+      const uvs = [];
+
+      // Generate vertices (top and bottom for each pixel)
+      for (let y = 0; y < canvasHeight; y++) {
+        for (let x = 0; x < canvasWidth; x++) {
+          const i = (y * canvasWidth + x) * 4;
+          const grayscale = imageData.data[i] / 255; // Normalize to 0-1
+          const z = grayscale * maxHeight; // Map grayscale to height
+          const xPos = x * scaleX - ((width * 25.4 + frameThickness * 2) / 2);
+          const yPos = (canvasHeight - y - 1) * scaleY - ((height * 25.4 + frameThickness * 2) / 2);
+          vertices.push(xPos, yPos, z); // Top vertex
+          vertices.push(xPos, yPos, 0); // Base vertex
+          uvs.push(x / canvasWidth, y / canvasHeight); // UV coordinates
+        }
+      }
+
+      // Generate indices for top surface
+      for (let y = 0; y < canvasHeight - 1; y++) {
+        for (let x = 0; x < canvasWidth - 1; x++) {
+          const i = (y * canvasWidth + x) * 2;
+          indices.push(i, i + 2, i + 2 + canvasWidth * 2);
+          indices.push(i, i + 2 + canvasWidth * 2, i + canvasWidth * 2);
+        }
+      }
+
+      // Add frame vertices and indices if enabled
+      if (addFrame) {
+        const frameWidth = width * 25.4 + frameThickness * 2;
+        const frameHeight = height * 25.4 + frameThickness * 2;
+        const frameDepth = maxHeight; // Frame height matches max lithophane height
+        const baseVertices = [
+          [-frameWidth / 2, -frameHeight / 2, 0], [frameWidth / 2, -frameHeight / 2, 0],
+          [frameWidth / 2, frameHeight / 2, 0], [-frameWidth / 2, frameHeight / 2, 0],
+          [-frameWidth / 2, -frameHeight / 2, frameDepth], [frameWidth / 2, -frameHeight / 2, frameDepth],
+          [frameWidth / 2, frameHeight / 2, frameDepth], [-frameWidth / 2, frameHeight / 2, frameDepth]
+        ];
+        const frameIndices = [
+          // Bottom face
+          0, 1, 2,  0, 2, 3,
+          // Top face
+          4, 6, 5,  4, 7, 6,
+          // Sides
+          0, 4, 5,  0, 5, 1,
+          1, 5, 6,  1, 6, 2,
+          2, 6, 7,  2, 7, 3,
+          3, 7, 4,  3, 4, 0
+        ].map(i => i + vertices.length / 3); // Offset indices for frame
+
+        baseVertices.forEach(v => vertices.push(...v));
+        indices.push(...frameIndices);
+      }
+
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+      geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+      geometry.setIndex(indices);
+      geometry.computeVertexNormals();
+
+      // Create texture from resultCanvas
+      const textureCanvas = document.getElementById('resultCanvas');
+      const texture = new THREE.CanvasTexture(textureCanvas);
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      const material = new THREE.MeshStandardMaterial({
+        map: texture,
+        side: THREE.DoubleSide,
+        roughness: 0.5,
+        metalness: 0.1
+      });
+      mesh = new THREE.Mesh(geometry, material);
+      scene.add(mesh);
+
+      // Adjust camera to fit the lithophane
+      const totalWidth = width * 25.4 + (addFrame ? frameThickness * 2 : 0);
+      const totalHeight = height * 25.4 + (addFrame ? frameThickness * 2 : 0);
+      const maxDim = Math.max(totalWidth, totalHeight);
+      camera.position.z = maxDim * 1.5;
+      camera.fov = 50;
+      camera.updateProjectionMatrix();
+    }
+
+    // Initialize result canvas dimensions
+    function initializeCanvas() {
+      const resultCanvas = document.getElementById('resultCanvas');
+      resultCanvas.width = productOptions[selectedProduct].previewWidth;
+      resultCanvas.height = productOptions[selectedProduct].previewHeight;
+    }
+
+    // Update cropper when product option changes
+    document.getElementById('productOption').addEventListener('change', e => {
+      selectedProduct = e.target.value;
+      initializeCanvas();
+      if (cropper) {
+        cropper.setAspectRatio(productOptions[selectedProduct].aspectRatio);
+        cropper.reset();
+      }
+      update3DVisualization();
+    });
+
+    // Update visualization when frame option changes
+    document.getElementById('addFrame').addEventListener('change', () => {
+      update3DVisualization();
+    });
+
+    // Image upload and cropper initialization
+    document.getElementById('upload').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) {
+        showNotification('No file selected!', 'error');
+        return;
+      }
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const img = document.getElementById('preview');
+        img.src = reader.result;
+
+        if (cropper) cropper.destroy();
+        cropper = new Cropper(img, {
+          aspectRatio: productOptions[selectedProduct].aspectRatio,
+          viewMode: 2,
+          autoCropArea: 0.9,
+          responsive: true,
+          scalable: true,
+          zoomable: true,
+          movable: true
+        });
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+    // Generate cropped result
+    function showCroppedResult() {
+      if (!cropper) {
+        showNotification('Please upload an image first!', 'error');
+        return;
+      }
+      const { previewWidth, previewHeight } = productOptions[selectedProduct];
+      const canvas = cropper.getCroppedCanvas({ width: previewWidth, height: previewHeight });
+      const ctx = document.getElementById('resultCanvas').getContext('2d');
+      const img = new Image();
+
+      img.onload = () => {
+        ctx.clearRect(0, 0, previewWidth, previewHeight);
+        ctx.drawImage(img, 0, 0, previewWidth, previewHeight);
+        imageData = ctx.getImageData(0, 0, previewWidth, previewHeight);
+        const data = imageData.data;
+
+        for (let i = 0; i < data.length; i += 4) {
+          const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+          data[i] = avg;
+          data[i + 1] = avg;
+          data[i + 2] = avg;
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+        update3DVisualization();
+        showNotification('Preview generated successfully!', 'success');
+      };
+
+      img.src = canvas.toDataURL();
+    }
+
+    // Generate and download STL file
+    function downloadSTL() {
+      if (!imageData) {
+        showNotification('Please generate a preview first!', 'error');
+        return;
+      }
+
+      const { width, height } = productOptions[selectedProduct];
+      const addFrame = document.getElementById('addFrame').checked;
+      const frameThickness = addFrame ? 5 : 0; // 5mm frame thickness
+      const canvasWidth = imageData.width;
+      const canvasHeight = imageData.height;
+      const data = imageData.data;
+      const maxHeight = 2; // Reduced max height for smoother lithophane
+      const scaleX = ((width * 25.4) + (frameThickness * 2)) / canvasWidth;
+      const scaleY = ((height * 25.4) + (frameThickness * 2)) / canvasHeight;
+
+      let stl = `solid lithophane\n`;
+      const vertices = [];
+      const indices = [];
+
+      // Generate vertices for lithophane
+      for (let y = 0; y < canvasHeight; y++) {
+        for (let x = 0; x < canvasWidth; x++) {
+          const i = (y * canvasWidth + x) * 4;
+          const grayscale = data[i] / 255;
+          const z = grayscale * maxHeight;
+          const xPos = x * scaleX - ((width * 25.4 + frameThickness * 2) / 2);
+          const yPos = (canvasHeight - y - 1) * scaleY - ((height * 25.4 + frameThickness * 2) / 2);
+          vertices.push([xPos, yPos, z]);
+          vertices.push([xPos, yPos, 0]);
+        }
+      }
+
+      // Generate faces for top surface
+      for (let y = 0; y < canvasHeight - 1; y++) {
+        for (let x = 0; x < canvasWidth - 1; x++) {
+          const i = (y * canvasWidth + x) * 2;
+          indices.push([i, i + 2, i + 2 + canvasWidth * 2]);
+          indices.push([i, i + 2 + canvasWidth * 2, i + canvasWidth * 2]);
+        }
+      }
+
+      // Add frame vertices and indices if enabled
+      if (addFrame) {
+        const frameWidth = width * 25.4 + frameThickness * 2;
+        const frameHeight = height * 25.4 + frameThickness * 2;
+        const frameDepth = maxHeight;
+        const frameVertices = [
+          [-frameWidth / 2, -frameHeight / 2, 0], [frameWidth / 2, -frameHeight / 2, 0],
+          [frameWidth / 2, frameHeight / 2, 0], [-frameWidth / 2, frameHeight / 2, 0],
+          [-frameWidth / 2, -frameHeight / 2, frameDepth], [frameWidth / 2, -frameHeight / 2, frameDepth],
+          [frameWidth / 2, frameHeight / 2, frameDepth], [-frameWidth / 2, frameHeight / 2, frameDepth]
+        ];
+        const frameIndices = [
+          0, 1, 2,  0, 2, 3,  // Bottom face
+          4, 6, 5,  4, 7, 6,  // Top face
+          0, 4, 5,  0, 5, 1,  // Sides
+          1, 5, 6,  1, 6, 2,
+          2, 6, 7,  2, 7, 3,
+          3, 7, 4,  3, 4, 0
+        ].map(i => i + vertices.length); // Offset indices
+
+        frameVertices.forEach(v => vertices.push(v));
+        indices.push(...frameIndices);
+      }
+
+      // Generate STL facets for lithophane
+      indices.forEach(([i1, i2, i3]) => {
+        const v1 = vertices[i1];
+        const v2 = vertices[i2];
+        const v3 = vertices[i3];
+        const normal = computeNormal(v1, v2, v3);
+        stl += `facet normal ${normal[0]} ${normal[1]} ${normal[2]}\n`;
+        stl += `  outer loop\n`;
+        stl += `    vertex ${v1[0]} ${v1[1]} ${v1[2]}\n`;
+        stl += `    vertex ${v2[0]} ${v2[1]} ${v2[2]}\n`;
+        stl += `    vertex ${v3[0]} ${v3[1]} ${v3[2]}\n`;
+        stl += `  endloop\n`;
+        stl += `endfacet\n`;
+      });
+
+      stl += `endsolid lithophane\n`;
+
+      // Download STL file
+      const blob = new Blob([stl], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `lithophane_${selectedProduct}${addFrame ? '_framed' : ''}.stl`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showNotification('STL file downloaded successfully!', 'success');
+    }
+
+    // Compute normal for STL facets
+    function computeNormal(v1, v2, v3) {
+      const u = [v2[0] - v1[0], v2[1] - v1[1], v2[2] - v1[2]];
+      const v = [v3[0] - v1[0], v3[1] - v1[1], v3[2] - v1[2]];
+      const normal = [
+        u[1] * v[2] - u[2] * v[1],
+        u[2] * v[0] - u[0] * v[2],
+        u[0] * v[1] - u[1] * v[0]
+      ];
+      const length = Math.sqrt(normal[0] ** 2 + normal[1] ** 2 + normal[2] ** 2);
+      return length > 0 ? normal.map(n => n / length) : [0, 0, 1];
+    }
+
+    // Hamburger menu
+    const ham = document.querySelector('.hamburger');
+    const nav = document.querySelector('.nav-links');
+    ham.addEventListener('click', () => {
+      ham.classList.toggle('active');
+      nav.classList.toggle('active');
+    });
+
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+        if (nav.classList.contains('active')) {
+          ham.classList.remove('active');
+          nav.classList.remove('active');
+        }
+      });
+    });
+
+    // Scroll reveal animation
+    const scrollElements = document.querySelectorAll('.scroll-reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    scrollElements.forEach(el => observer.observe(el));
+
+    // Notification function
+    function showNotification(message, type) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = `notification ${type}`;
+      setTimeout(() => {
+        notification.className = 'notification hide';
+        setTimeout(() => {
+          notification.className = 'notification';
+          notification.textContent = '';
+        }, 300);
+      }, 3000);
+    }
+
+    // Cart functionality
+    const cart = {
+      items: [],
+      addItem(product, price) {
+        this.items.push({ product, price: parseFloat(price) });
+        this.updateCart();
+      },
+      removeItem(index) {
+        this.items.splice(index, 1);
+        this.updateCart();
+      },
+      getTotal() {
+        return this.items.reduce((total, item) => total + item.price, 0).toFixed(2);
+      },
+      updateCart() {
+        const cartCount = document.querySelector('.cart-count');
+        const cartItems = document.querySelector('.cart-items');
+        const cartTotal = document.querySelector('.cart-total');
+        cartCount.textContent = this.items.length;
+        cartItems.innerHTML = '';
+        this.items.forEach((item, index) => {
+          const itemElement = document.createElement('div');
+          itemElement.classList.add('cart-item');
+          itemElement.innerHTML = `
+            <span>${item.product} - $${item.price.toFixed(2)}</span>
+            <button onclick="cart.removeItem(${index})">Remove</button>
+          `;
+          cartItems.appendChild(itemElement);
+        });
+        cartTotal.textContent = `Total: $${this.getTotal()}`;
+        localStorage.setItem('cart', JSON.stringify(this.items));
+      }
+    };
+
+    // Load cart from localStorage
+    if (localStorage.getItem('cart')) {
+      cart.items = JSON.parse(localStorage.getItem('cart'));
+      cart.updateCart();
+    }
+
+    // Cart modal
+    const cartBtn = document.querySelector('.cart-btn');
+    const cartModal = document.querySelector('.cart-modal');
+    const closeCart = document.querySelector('.close-cart');
+    const checkoutBtn = document.querySelector('.checkout');
+
+    cartBtn.addEventListener('click', () => {
+      cartModal.classList.toggle('active');
+    });
+
+    closeCart.addEventListener('click', () => {
+      cartModal.classList.remove('active');
+    });
+
+    checkoutBtn.addEventListener('click', () => {
+      if (cart.items.length === 0) {
+        showNotification('Your cart is empty!', 'error');
+      } else {
+        showNotification('Proceeding to checkout (this is a demo, no actual payment processing).', 'success');
+        cart.items = [];
+        cart.updateCart();
+        cartModal.classList.remove('active');
+      }
+    });
+
+    // Initialize Three.js and canvas
+    window.onload = () => {
+      initThreeJS();
+      initializeCanvas();
+    };
+  </script>
+</body>
+</html>
