@@ -1,810 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Litho3D | Next-Gen Lithophanes</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Litho3D Studio - Maintenance Notice</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+
   <style>
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
-      VARIABLES 
-    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
     :root {
-      --dark-bg: #1e272e;
-      --light-bg: #f1f2f6;
-      --white:   #ffffff;
-      --accent:  #34ace0;
-      --accent-dark: #227093;
-      --cta:     #ff6b6b;
-      --cta-dark:#ee5253;
-      --text:    #2f3542;
-      --text-light: #555;
-      --radius:  12px;
-      --gap:     24px;
-      --transition-fast: 0.25s;
-      --transition-slow: 0.5s;
-      --shadow-light: rgba(0,0,0,0.08);
-      --shadow-strong: rgba(0,0,0,0.2);
-      --success: #2ecc71;
-      --error: #e74c3c;
+      --bg: #f9f9fb;
+      --accent: #1e88e5;
+      --accent-dk: #1565c0;
+      --text: #2c3e50;
+      --radius: 12px;
+      --shadow: rgba(0,0,0,0.1);
     }
 
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
-      RESET & BASE 
-    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
-    *, *::before, *::after {
-      margin: 0; padding: 0; box-sizing: border-box;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    html { scroll-behavior: smooth; }
+
     body {
       font-family: 'Inter', sans-serif;
-      background: var(--light-bg);
+      background: var(--bg);
       color: var(--text);
-      line-height: 1.6;
-      padding-top: 70px;
-    }
-    a { text-decoration: none; color: inherit; }
-
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
-      SCROLL ANIMATION 
-    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
-    .scroll-reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity var(--transition-slow) ease-out, transform var(--transition-slow) ease-out;
-    }
-    .scroll-reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      padding: 2rem;
     }
 
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
-      NOTIFICATION 
-    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
-    .notification {
-      position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
-      padding: 0.8rem 1.6rem; border-radius: var(--radius);
-      font-family: 'Montserrat', sans-serif; font-size: 0.9rem;
-      color: #fff; z-index: 3000; display: none;
-      box-shadow: 0 4px 12px var(--shadow-strong);
-      transition: opacity var(--transition-fast) ease-in-out, transform var(--transition-fast) ease-in-out;
-    }
-    .notification.success {
-      display: block; background: var(--success);
-      opacity: 1; transform: translateX(-50%) translateY(0);
-    }
-    .notification.error {
-      display: block; background: var(--error);
-      opacity: 1; transform: translateX(-50%) translateY(0);
-    }
-    .notification.hide {
-      opacity: 0; transform: translateX(-50%) translateY(-20px);
+    .container {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 24px var(--shadow);
+      padding: 2rem 3rem;
+      max-width: 600px;
     }
 
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
-      NAVBAR 
-    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
-    header {
-      position: fixed; top: 0; left: 0; width: 100%;
-      background: linear-gradient(90deg, var(--dark-bg), var(--accent-dark));
-      box-shadow: 0 4px 12px var(--shadow-strong);
-      z-index: 1000;
-    }
-    .navbar {
-      max-width: 1200px; margin: auto;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1rem var(--gap);
+    h1 {
       font-family: 'Montserrat', sans-serif;
-    }
-    .logo {
-      color: #fff; font-size: 1.5rem; font-weight: 600;
-      margin-left: 3rem;
-    }
-    .nav-links {
-      list-style: none; display: flex; gap: var(--gap); align-items: center;
-    }
-    .nav-links li {
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
       position: relative;
     }
-    .nav-links a {
-      color: #fff; padding: 0.5rem 0; font-weight: 500;
-      transition: color var(--transition-fast);
-    }
-    .nav-links a:not(.cta)::after {
-      content: ''; position: absolute; left: 0; bottom: -2px;
-      width: 0; height: 2px; background: var(--accent);
-      transition: width var(--transition-fast);
-    }
-    .nav-links a:not(.cta):hover {
-      color: var(--accent);
-    }
-    .nav-links a:not(.cta):hover::after {
-      width: 100%;
-    }
-    .nav-links .cta {
-      padding: 0.5rem 1rem; border-radius: var(--radius);
-      background: var(--cta); box-shadow: 0 4px 8px var(--shadow-strong);
-      transition: transform var(--transition-fast) ease-in-out, box-shadow var(--transition-fast) ease-in-out, background var(--transition-fast);
-    }
-    .nav-links .cta:hover {
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 8px 16px var(--shadow-strong);
-      background: var(--cta-dark);
-    }
-    .cart-btn {
-      position: relative; display: flex; align-items: center;
-      padding: 0.5rem; cursor: pointer;
-    }
-    .cart-btn svg {
-      width: 24px; height: 24px; fill: #fff;
-      transition: fill var(--transition-fast);
-    }
-    .cart-btn:hover svg { fill: var(--accent); }
-    .cart-count {
-      position: absolute; top: -4px; right: -4px;
-      background: var(--cta); color: #fff;
-      border-radius: 50%; font-size: 0.75rem;
-      width: 18px; height: 18px; line-height: 18px;
-      text-align: center;
-    }
 
-    /* HAMBURGER (MOBILE) */
-    .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 6px; }
-    .bar {
-      width: 28px; height: 3px; background: #fff;
-      border-radius: 3px;
-      transition: all var(--transition-fast) ease-in-out;
-    }
-    @media(max-width:768px) {
-      .nav-links {
-        position: absolute; top: 64px; left: 0;
-        background: var(--dark-bg); flex-direction: column;
-        width: 100%; padding: 1.5rem; display: none;
-        transform: translateX(100%);
-        transition: transform var(--transition-fast) ease-in-out;
-      }
-      .nav-links.active {
-        display: flex;
-        transform: translateX(0);
-        animation: bounceIn 0.4s ease-out;
-      }
-      .hamburger { display: flex; }
-      .hamburger.active .bar:nth-child(1) {
-        transform: rotate(45deg) translate(6px, 6px);
-        background: var(--accent);
-      }
-      .hamburger.active .bar:nth-child(2) {
-        transform: scale(0.1) rotate(360deg);
-        opacity: 0;
-      }
-      .hamburger.active .bar:nth-child(3) {
-        transform: rotate(-45deg) translate(6px, -6px);
-        background: var(--accent);
-      }
-    }
-    @keyframes bounceIn {
-      0% { transform: translateX(100%); }
-      60% { transform: translateX(-10px); }
-      100% { transform: translateX(0); }
-    }
-
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
-      CART MODAL 
-    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
-    .cart-modal {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5); display: none; align-items: center;
-      justify-content: center; z-index: 2000;
-    }
-    .cart-modal.active { display: flex; }
-    .cart-content {
-      background: var(--white); padding: 2rem; border-radius: var(--radius);
-      max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;
-      box-shadow: 0 4px 12px var(--shadow-strong);
-    }
-    .cart-content h2 {
-      font-family: 'Montserrat', sans-serif; font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-    .cart-item {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0.5rem 0; border-bottom: 1px solid #eee;
-    }
-    .cart-item:last-child { border-bottom: none; }
-    .cart-item button {
-      background: var(--cta); color: #fff; border: none;
-      padding: 0.4rem 0.8rem; border-radius: var(--radius);
-      cursor: pointer; font-family: 'Montserrat', sans-serif;
-    }
-    .cart-total {
-      font-weight: 600; margin-top: 1rem; text-align: right;
-    }
-    .cart-buttons {
-      display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1rem;
-    }
-    .cart-buttons button {
-      padding: 0.6rem 1.2rem; border-radius: var(--radius);
-      cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 600;
-    }
-    .cart-buttons .close-cart {
-      background: #ccc; color: var(--text);
-    }
-    .cart-buttons .checkout {
-      background: var(--accent); color: #fff;
-    }
-
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
-      SECTION TITLES 
-    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
-    section {
-      padding: 100px var(--gap) 60px;
-    }
-    section:nth-child(odd) { background: var(--white); }
-    section:nth-child(even){ background: var(--light-bg); }
-    h2 {
-      text-align: center; font-family: 'Montserrat', sans-serif;
-      font-size: 2.25rem; font-weight: 600; color: var(--text);
-      position: relative; margin-bottom: 0.5rem;
-    }
-    h2::after {
-      content: ''; display: block; width: 80px; height: 4px;
-      background: var(--accent); margin: 8px auto 0;
+    h1::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
       border-radius: 2px;
-    }
-    section p {
-      max-width: 700px; margin: 1rem auto 2rem;
-      color: var(--text-light); text-align: center;
+      margin: 8px auto 0;
     }
 
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
-      UTILITY BUTTON 
-    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
-    .btn {
-      display: inline-block; position: relative;
-      padding: 0.6rem 1.4rem; font-family: 'Montserrat', sans-serif;
-      font-weight: 600; color: #fff; overflow: hidden;
-      border-radius: var(--radius); background: linear-gradient(45deg, var(--accent), var(--accent-dark));
-      box-shadow: 0 4px 8px var(--shadow-strong);
-      transition: transform var(--transition-fast) ease-in-out, box-shadow var(--transition-fast) ease-in-out, background var(--transition-fast) ease-in-out;
-      z-index: 1;
-    }
-    .btn:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 8px 20px var(--shadow-strong), 0 0 10px rgba(52,172,224,0.3);
-      background: linear-gradient(45deg, var(--accent-dark), var(--accent));
-    }
-    .btn::before {
-      content: ''; position: absolute; top: 0; left: -100%;
-      width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: left var(--transition-slow) ease-in-out;
-      z-index: -1;
-    }
-    .btn:hover::before {
-      left: 100%;
+    p {
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+      color: #555;
     }
 
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
-      ABOUT FEATURES 
-    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
-      gap: var(--gap);
-      margin-top: 2rem;
-    }
-    .feature {
-      background: var(--white); padding: 1.8rem;
-      border-radius: var(--radius);
-      box-shadow: 0 4px 12px var(--shadow-light);
-      text-align: center; transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-    }
-    .feature:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 24px var(--shadow-strong);
-    }
-    .feature h3 {
-      font-family: 'Montserrat', sans-serif;
-      color: var(--accent-dark); margin-bottom: 0.5rem;
-    }
-    .feature p { color: var(--text-light); }
-
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
-      PROCESS STEPS 
-    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
-    .process-steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
-      gap: var(--gap);
-      margin-top: 2rem;
-    }
-    .step {
-      background: var(--white); padding: 1.8rem;
-      border-radius: var(--radius);
-      box-shadow: 0 4px 12px var(--shadow-light);
-      text-align: center;
-      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-    }
-    .step:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 24px var(--shadow-strong);
-    }
-    .step-number {
+    a.button {
       display: inline-block;
-      width: 48px; height: 48px; line-height: 48px;
-      border-radius: 50%; background: var(--accent);
-      color: #fff; font-weight: 600; margin-bottom: 0.5rem;
-    }
-    .step h3 {
-      font-family: 'Montserrat', sans-serif;
-      margin-bottom: 0.5rem;
-    }
-    .step p { color: var(--text-light); font-size: 0.93rem; }
-
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
-      GALLERY 
-    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
-      gap: var(--gap);
-    }
-    .gallery-item {
-      overflow: hidden; border-radius: var(--radius);
-      box-shadow: 0 4px 12px var(--shadow-light);
-      transition: transform var(--transition-fast), filter var(--transition-fast);
-      filter: grayscale(30%) contrast(0.9);
-    }
-    .gallery-item:hover {
-      transform: translateY(-6px);
-      filter: none;
-    }
-    .gallery-item img {
-      width: 100%; height: auto; display: block;
+      padding: 0.8rem 1.6rem;
+      background: linear-gradient(45deg, var(--accent), var(--accent-dk));
+      color: white;
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      box-shadow: 0 4px 12px var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
-      SHOP CARDS 
-    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
-    .shop-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
-      gap: var(--gap);
-    }
-    .product-card {
-      background: var(--white); border-radius: var(--radius);
-      box-shadow: 0 4px 12px var(--shadow-light);
-      overflow: hidden; display: flex; flex-direction: column;
-      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-      perspective: 1000px;
-    }
-    .product-card:hover {
-      transform: translateY(-6px) rotateX(3deg);
-      box-shadow: 0 16px 32px var(--shadow-strong);
-    }
-    .product-card img {
-      width: 100%; height: 180px; object-fit: cover;
-    }
-    .product-info {
-      flex: 1; padding: 1rem; display: flex; flex-direction: column;
-      justify-content: space-between;
-    }
-    .product-info h3 {
-      font-family: 'Montserrat', sans-serif;
-      color: var(--accent-dark); margin-bottom: 0.5rem;
-    }
-    .product-info p {
-      color: var(--text-light); font-size: 0.93rem; margin-bottom: 1rem;
-    }
-    .product-info button {
-      align-self: start;
-      background: linear-gradient(45deg, var(--cta), var(--cta-dark));
-      color: #fff; border: none;
-      padding: 0.6rem 1.2rem; border-radius: var(--radius);
-      cursor: pointer; box-shadow: 0 4px 8px var(--shadow-strong);
-      font-family: 'Montserrat', sans-serif; font-weight: 600;
-      transition: transform var(--transition-fast) ease-in-out, box-shadow var(--transition-fast) ease-in-out, background var(--transition-fast) ease-in-out;
-      position: relative; overflow: hidden; z-index: 1;
-    }
-    .product-info button:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 8px 20px var(--shadow-strong), 0 0 10px rgba(255,107,107,0.3);
-      background: linear-gradient(45deg, var(--cta-dark), var(--cta));
-    }
-    .product-info button::before {
-      content: ''; position: absolute; top: 0; left: -100%;
-      width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: left var(--transition-slow) ease-in-out;
-      z-index: -1;
-    }
-    .product-info button:hover::before {
-      left: 100%;
+    a.button:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 8px 20px var(--shadow), 0 0 10px rgba(30,136,229,0.3);
     }
 
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
-      CONTACT FORM 
-    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
-    .contact-form {
-      max-width: 500px; margin: auto; background: var(--white);
-      padding: 2rem; border-radius: var(--radius);
-      box-shadow: 0 4px 12px var(--shadow-light);
-      display: flex; flex-direction: column; gap: 1rem;
-    }
-    .contact-form input,
-    .contact-form textarea {
-      padding: 0.8rem; border: 1px solid #ccc;
-      border-radius: var(--radius); font-size: 1rem;
-      transition: border var(--transition-fast), box-shadow var(--transition-fast);
-    }
-    .contact-form input:focus,
-    .contact-form textarea:focus {
-      border-color: var(--accent); outline: none;
-      box-shadow: 0 0 0 3px rgba(52,172,224,0.2);
-    }
-    .contact-form button {
-      align-self: center;
-      background: linear-gradient(45deg, var(--accent), var(--accent-dark));
-      color: #fff; border: none;
-      padding: 0.8rem 1.6rem; border-radius: var(--radius);
-      cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 600;
-      position: relative; overflow: hidden; z-index: 1;
-      transition: transform var(--transition-fast) ease-in-out, box-shadow var(--transition-fast) ease-in-out, background var(--transition-fast) ease-in-out;
-    }
-    .contact-form button:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 8px 20px var(--shadow-strong), 0 0 10px rgba(52,172,224,0.3);
-      background: linear-gradient(45deg, var(--accent-dark), var(--accent));
-    }
-    .contact-form button::before {
-      content: ''; position: absolute; top: 0; left: -100%;
-      width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: left var(--transition-slow) ease-in-out;
-      z-index: -1;
-    }
-    .contact-form button:hover::before {
-      left: 100%;
-    }
-    .form-message {
-      text-align: center; padding: 0.8rem; border-radius: var(--radius);
-      margin-top: 1rem; display: none; font-family: 'Montserrat', sans-serif;
-      font-size: 0.9rem;
-    }
-    .form-message.success {
-      display: block; background: var(--success); color: #fff;
-    }
-    .form-message.error {
-      display: block; background: var(--error); color: #fff;
-    }
-
-    /*––––––––––––––––––––––––––––––––––––––––––––––––––––– 
-      FOOTER 
-    –––––––––––––––––––––––––––––––––––––––––––––––––––––*/
     footer {
-      background: var(--dark-bg); color: #ccc;
-      text-align: center; padding: 1.5rem var(--gap);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      color: #7f8c8d;
+      margin-top: 1.5rem;
     }
-    footer a { color: var(--accent); }
   </style>
 </head>
 <body>
-  <!-- NOTIFICATION -->
-  <div class="notification" id="notification"></div>
-
-  <!-- NAVBAR -->
-  <header>
-    <nav class="navbar">
-      <div class="logo">Litho3D</div>
-      <ul class="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#process">Process</a></li>
-        <li><a href="#gallery">Gallery</a></li>
-        <li><a href="#shop" class="cta">Buy Now</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li>
-          <div class="cart-btn">
-            <svg viewBox="0 0 24 24">
-              <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 21.96 4H5.21L4.27 2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
-            </svg>
-            <span class="cart-count">0</span>
-          </div>
-        </li>
-      </ul>
-      <div class="hamburger">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-      </div>
-    </nav>
-  </header>
-
-  <!-- CART MODAL -->
-  <div class="cart-modal">
-    <div class="cart-content">
-      <h2>Your Cart</h2>
-      <div class="cart-items"></div>
-      <div class="cart-total">Total: $0.00</div>
-      <div class="cart-buttons">
-        <button class="close-cart">Close</button>
-        <button class="checkout">Checkout</button>
-      </div>
-    </div>
+  <div class="container">
+    <h1>Litho3D Studio</h1>
+    <p>
+      We’re currently fixing a bug with the Lithophane generation platform.<br>
+      If you’d like to buy one while we get things working again, click below.
+    </p>
+    <a class="button" href="https://litho3d.studio/store" target="_blank">
+      Visit Store
+    </a>
+    <footer>© 2025 Litho3D Studio. All rights reserved.</footer>
   </div>
 
-  <!-- ABOUT -->
-  <section id="about" class="scroll-reveal">
-    <h2>About Litho3D</h2>
-    <p>Litho3D transforms your cherished memories into stunning 3D-printed lithophanes, blending cutting-edge technology with artisan craftsmanship. Our mission is to create personalized keepsakes that capture the essence of your special moments, perfect for gifting or decorating your home.</p>
-    <div class="features">
-      <div class="feature scroll-reveal">
-        <h3>High-Res Printing</h3>
-        <p>Using advanced 3D printers with 0.1mm layer precision, we achieve crisp details and smooth gradients, ensuring your images come to life with exceptional clarity and depth.</p>
-      </div>
-      <div class="feature scroll-reveal">
-        <h3>Eco Conscious</h3>
-        <p>We use biodegradable PLA filament and partner with reforestation initiatives to plant a tree for every order, contributing to a sustainable future for our planet.</p>
-      </div>
-      <div class="feature scroll-reveal">
-        <h3>Artisan Finish</h3>
-        <p>Each lithophane is meticulously hand-sanded, polished, and quality-checked by our skilled artisans to deliver a flawless, premium product that feels as good as it looks.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROCESS -->
-  <section id="process" class="scroll-reveal">
-    <h2>Our Process</h2>
-    <p>Turn your favorite photo into a glowing keepsake in four seamless steps. Our user-friendly process combines intuitive tools with expert craftsmanship to ensure a hassle-free experience from start to finish.</p>
-    <div class="process-steps">
-      <div class="step scroll-reveal">
-        <div class="step-number">1</div>
-        <h3>Upload Photo</h3>
-        <p>Easily drag and drop your high-contrast JPG or PNG. Our system supports various image formats and provides instant feedback to ensure optimal results.</p>
-      </div>
-      <div class="step scroll-reveal">
-        <div class="step-number">2</div>
-        <h3>Preview & Crop</h3>
-        <p>Use our real-time editor to reposition, resize, or apply filters to your image, allowing you to perfect the composition before printing begins.</p>
-      </div>
-      <div class="step scroll-reveal">
-        <div class="step-number">3</div>
-        <h3>Print & Finish</h3>
-        <p>Our team prints your design with precision, then hand-finishes each piece with care, polishing and packaging it securely for delivery to your door.</p>
-      </div>
-      <div class="step scroll-reveal">
-        <div class="step-number">4</div>
-        <h3>Enjoy & Share</h3>
-        <p>Display your lithophane on an LED base or in a window to reveal its magical glow, perfect for sharing with loved ones or cherishing forever.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- GALLERY -->
-  <section id="gallery" class="scroll-reveal">
-    <h2>Gallery</h2>
-    <p>Discover a collection of real customer lithophanes, showcasing the beauty and versatility of our creations. From family portraits to scenic landscapes, find inspiration for your own unique piece.</p>
-    <div class="gallery-grid">
-      <div class="gallery-item scroll-reveal"><img src="lithophane1.jpg" alt="Memory 1"></div>
-      <div class="gallery-item scroll-reveal"><img src="lithophane2.jpg" alt="Memory 2"></div>
-      <div class="gallery-item scroll-reveal"><img src="lithophane3.jpg" alt="Memory 3"></div>
-      <div class="gallery-item scroll-reveal"><img src="lithophane4.jpg" alt="Memory 4"></div>
-    </div>
-  </section>
-
-  <!-- SHOP -->
-  <section id="shop" class="scroll-reveal">
-    <h2>Shop</h2>
-    <p>Explore our range of lithophane options, from standard designs to fully custom creations. Each order includes a complimentary LED diffuser to enhance the glow of your keepsake, making it a perfect gift or home decor piece.</p>
-    <div class="shop-grid">
-      <div class="product-card scroll-reveal">
-        <img src="product-standard.jpg" alt="Standard Lithophane">
-        <div class="product-info">
-          <h3>Standard</h3>
-          <p>Our 4×6" curved lithophane is designed to fit any LED base, offering a timeless way to display your favorite photo with stunning clarity and depth.</p>
-          <p><strong>$29.99</strong></p>
-          <button class="btn" data-product="Standard" data-price="29.99">Add to Cart</button>
-        </div>
-      </div>
-      <div class="product-card scroll-reveal">
-        <img src="product-framed.jpg" alt="Framed Lithophane">
-        <div class="product-info">
-          <h3>Framed</h3>
-          <p>This 5×7" lithophane comes in a sleek black or white frame, ready to hang or display on a stand, adding elegance to any space.</p>
-          <p><strong>$49.99</strong></p>
-          <button class="btn" data-product="Framed" data-price="49.99">Add to Cart</button>
-        </div>
-      </div>
-      <div class="product-card scroll-reveal">
-        <img src="product-custom.jpg" alt="Custom Lithophane">
-        <div class="product-info">
-          <h3>Custom</h3>
-          <p>Create a one-of-a-kind lithophane with your choice of size, shape, and border. Preview your design in real-time before we craft it to perfection.</p>
-          <p><strong>$59.99</strong></p>
-          <button class="btn" data-product="Custom" data-price="59.99">Add to Cart</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact" class="scroll-reveal">
-    <h2>Contact</h2>
-    <p>Have questions about bulk orders, custom designs, materials, or shipping? Our dedicated team is here to provide personalized support and answer any inquiries to ensure your experience is exceptional.</p>
-    <form class="contact-form scroll-reveal" action="https://formspree.io/f/xblkjkpg" method="POST">
-      <input type="text" name="name" placeholder="Your Name" required>
-      <input type="email" name="email" placeholder="Your Email" required>
-      <textarea rows="5" name="message" placeholder="Your Message" required></textarea>
-      <button class="btn" type="submit">Send Message</button>
-      <div class="form-message"></div>
-    </form>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <p>© 2025 Litho3D. All rights reserved.</p>
-    <p>Email: <a href="mailto:sunmayp@gmail.com">sunmayp@gmail.com</a> | Phone: (240) 810-5647</p>
-  </footer>
-
-  <!-- SCRIPT -->
   <script>
-    // Hamburger menu
-    const ham = document.querySelector('.hamburger');
-    const nav = document.querySelector('.nav-links');
-    ham.addEventListener('click', () => {
-      ham.classList.toggle('active');
-      nav.classList.toggle('active');
-    });
-
-    // Smooth scroll for nav links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-          behavior: 'smooth'
-        });
-        if (nav.classList.contains('active')) {
-          ham.classList.remove('active');
-          nav.classList.remove('active');
-        }
-      });
-    });
-
-    // Scroll reveal animation
-    const scrollElements = document.querySelectorAll('.scroll-reveal');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
-    scrollElements.forEach(el => observer.observe(el));
-
-    // Notification function
-    function showNotification(message, type) {
-      const notification = document.getElementById('notification');
-      notification.textContent = message;
-      notification.className = `notification ${type}`;
-      setTimeout(() => {
-        notification.className = 'notification hide';
-        setTimeout(() => {
-          notification.className = 'notification';
-          notification.textContent = '';
-        }, 300);
-      }, 3000);
-    }
-
-    // Cart functionality
-    const cart = {
-      items: [],
-      addItem(product, price) {
-        this.items.push({ product, price: parseFloat(price) });
-        this.updateCart();
-      },
-      removeItem(index) {
-        this.items.splice(index, 1);
-        this.updateCart();
-      },
-      getTotal() {
-        return this.items.reduce((total, item) => total + item.price, 0).toFixed(2);
-      },
-      updateCart() {
-        const cartCount = document.querySelector('.cart-count');
-        const cartItems = document.querySelector('.cart-items');
-        const cartTotal = document.querySelector('.cart-total');
-        cartCount.textContent = this.items.length;
-        cartItems.innerHTML = '';
-        this.items.forEach((item, index) => {
-          const itemElement = document.createElement('div');
-          itemElement.classList.add('cart-item');
-          itemElement.innerHTML = `
-            <span>${item.product} - $${item.price.toFixed(2)}</span>
-            <button onclick="cart.removeItem(${index})">Remove</button>
-          `;
-          cartItems.appendChild(itemElement);
-        });
-        cartTotal.textContent = `Total: $${this.getTotal()}`;
-        localStorage.setItem('cart', JSON.stringify(this.items));
-      }
-    };
-
-    // Load cart from localStorage
-    if (localStorage.getItem('cart')) {
-      cart.items = JSON.parse(localStorage.getItem('cart'));
-      cart.updateCart();
-    }
-
-    // Add to cart buttons
-    document.querySelectorAll('.product-info button').forEach(button => {
-      button.addEventListener('click', () => {
-        const product = button.getAttribute('data-product');
-        const price = button.getAttribute('data-price');
-        cart.addItem(product, price);
-        showNotification(`${product} added to cart!`, 'success');
-      });
-    });
-
-    // Cart modal
-    const cartBtn = document.querySelector('.cart-btn');
-    const cartModal = document.querySelector('.cart-modal');
-    const closeCart = document.querySelector('.close-cart');
-    const checkoutBtn = document.querySelector('.checkout');
-
-    cartBtn.addEventListener('click', () => {
-      cartModal.classList.toggle('active');
-    });
-
-    closeCart.addEventListener('click', () => {
-      cartModal.classList.remove('active');
-    });
-
-    checkoutBtn.addEventListener('click', () => {
-      if (cart.items.length === 0) {
-        showNotification('Your cart is empty!', 'error');
-      } else {
-        showNotification('Proceeding to checkout (this is a demo, so no actual payment processing is implemented).', 'success');
-        cart.items = [];
-        cart.updateCart();
-        cartModal.classList.remove('active');
-      }
-    });
-
-    // Formspree form submission
-    const contactForm = document.querySelector('.contact-form');
-    const formMessage = document.querySelector('.form-message');
-    contactForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(contactForm);
-      try {
-        const response = await fetch('https://formspree.io/f/xblkjkpg', {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
-        if (response.ok) {
-          formMessage.textContent = 'Message sent successfully!';
-          formMessage.className = 'form-message success';
-          contactForm.reset();
-          setTimeout(() => {
-            formMessage.className = 'form-message';
-          }, 3000);
-        } else {
-          formMessage.textContent = 'There was an error sending your message. Please try again.';
-          formMessage.className = 'form-message error';
-          setTimeout(() => {
-            formMessage.className = 'form-message';
-          }, 3000);
-        }
-      } catch (error) {
-        formMessage.textContent = 'There was an error sending your message. Please try again.';
-        formMessage.className = 'form-message error';
-        setTimeout(() => {
-          formMessage.className = 'form-message';
-        }, 3000);
-      }
-    });
+    // Redirect after 8 seconds — mercifully fast enough to keep people from wandering off.
+    setTimeout(() => {
+      window.location.href = "https://litho3d.studio/store";
+    }, 8000);
   </script>
 </body>
 </html>
