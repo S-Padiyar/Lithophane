@@ -9,6 +9,7 @@
 
   <style>
     :root {
+      /* Dark (default) theme */
       --dark-bg: #10141b;
       --dark-bg-soft: #151b24;
       --dark-elevated: #181f2a;
@@ -763,28 +764,58 @@
       overflow: hidden;
     }
 
-    /* ===== LIGHT THEME OVERRIDE (same color scheme, slightly lifted) ===== */
+    /* ===== LIGHT THEME (blue scheme) ===== */
     body.light-theme {
-      background: radial-gradient(circle at top, #252f44 0, #0a0f19 45%, #05070b 100%);
+      --dark-bg: #1e272e;
+      --light-bg: #f1f2f6;
+      --white:   #ffffff;
+      --accent:  #34ace0;
+      --accent-soft: #34ace0;
+      --accent-dark:#227093;
+      --cta:     #ff6b6b;
+      --cta-dark:#ee5253;
+      --text:    #2f3542;
+      --text-muted: #555;
+      background: var(--light-bg);
       color: var(--text);
     }
+    body.light-theme header {
+      background: linear-gradient(90deg, var(--dark-bg), var(--accent-dark));
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
     body.light-theme .panel {
-      background: radial-gradient(circle at top left, #243049, #141a26 55%, #060810 100%);
-      border-color: rgba(255,255,255,0.08);
+      background: #ffffff;
+      border-color: rgba(0,0,0,0.06);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
     }
     body.light-theme #preview {
-      background: radial-gradient(circle at 5% 0, #1c2940, #060910 50%, #04060d 100%);
+      background: #e2e7f3;
     }
     body.light-theme .metric,
     body.light-theme .timeline {
-      background: rgba(0,0,0,0.4);
-      border-color: rgba(255,255,255,0.12);
+      background: #ffffff;
+      border-color: rgba(0,0,0,0.06);
     }
     body.light-theme .btn-top,
     body.light-theme .cad-toolbar,
     body.light-theme .cad-tool-btn {
-      border-color: rgba(255,255,255,0.18);
-      background: rgba(0,0,0,0.4);
+      border-color: rgba(0,0,0,0.15);
+    }
+    body.light-theme .cad-toolbar {
+      background: #f5f7fb;
+    }
+    body.light-theme .cad-tool-btn {
+      background: #ffffff;
+      color: #2f3542;
+    }
+    body.light-theme .cad-tool-btn.active {
+      color: #ffffff;
+    }
+    body.light-theme .designer-top-row h2 {
+      color: #1e272e;
+    }
+    body.light-theme .designer-top-row h2 .sub {
+      color: var(--text-muted);
     }
   </style>
 </head>
@@ -795,7 +826,7 @@
     <nav class="navbar">
       <div class="logo">
         <div class="logo-mark"></div>
-        <span>Litho3D</span>
+        <span>Litho3D | Sunmay Padiyar</span>
       </div>
 
       <div class="top-tools">
@@ -1287,7 +1318,6 @@
     const btnDropToFloor = $('btnDropToFloor');
     const btnFullscreen = $('btnFullscreen');
     const btnResetCamera = $('btnResetCamera');
-    const btnVisitStore = $('btnVisitStore');
     const previewSizeSel = $('preview-size');
     const chipImageState = $('chipImageState');
     const chipMeshState = $('chipMeshState');
@@ -1297,6 +1327,7 @@
     const btnSaveProject = $('btnSaveProject');
     const btnLoadProject = $('btnLoadProject');
     const projectFile = $('projectFile');
+    const btnVisitStore = $('btnVisitStore');
 
     // CAD toolbar
     const toolSelect = $('toolSelect');
@@ -1354,12 +1385,10 @@
     const themeToggleBall = document.querySelector('.theme-toggle-ball');
     const timelineEl = $('timeline');
 
-    /* Visit Store click (simple external link; edit URL as needed) */
-    if (btnVisitStore) {
-      btnVisitStore.addEventListener('click', () => {
-        window.open('https://litho3d.studio/store.html', '_blank');
-      });
-    }
+    /* ========== VISIT STORE BUTTON ========== */
+    btnVisitStore.addEventListener('click', () => {
+      window.open('https://litho3d.com', '_blank');
+    });
 
     /* ========== TAB SWITCHING ========== */
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -1367,11 +1396,10 @@
         const tab = btn.dataset.tab;
         const panel = document.getElementById(tab);
         if (!panel) return;
-        // deactivate siblings in this group
         const parentTabs = btn.parentElement;
         parentTabs.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        const panelContainer = parentTabs.parentElement.parentElement; // panel-body -> panel
+        const panelContainer = parentTabs.parentElement.parentElement;
         panelContainer.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
         panel.classList.add('active');
       });
@@ -1667,9 +1695,6 @@
       btn.addEventListener('click', () => {
         const mode = btn.dataset.cam;
         if (mode) setCamPreset(mode);
-        if (mode === undefined && btn === btnFullscreen) {
-          // handled separately
-        }
       });
     });
 
@@ -1969,14 +1994,13 @@
       for (let iy = 0; iy < pxH; iy++) {
         for (let ix = 0; ix < pxW; ix++) {
           const idx = iy * pxW + ix;
-          const z = (1 - g[idx]) * depth + 0.001; // raised from base
+          const z = (1 - g[idx]) * depth + 0.001;
           posFront.setZ(idx, z);
         }
       }
       posFront.needsUpdate = true;
       geoFront.computeVertexNormals();
 
-      // Back flat plate at tMin
       const geoBack = new THREE.PlaneGeometry(Wmm, Hmm);
       geoBack.rotateY(Math.PI);
       geoBack.translate(0, 0, tMinV);
@@ -1996,8 +2020,8 @@
       const totalArc = 2 * Math.PI * arcFraction;
       for (let i = 0; i < pos.count; i++) {
         v.fromBufferAttribute(pos, i);
-        const u = (v.x - box.min.x) / Wmm; // 0..1
-        const angle = -totalArc * (u - 0.5); // center front
+        const u = (v.x - box.min.x) / Wmm;
+        const angle = -totalArc * (u - 0.5);
         const r = radius + v.z;
         const nx = Math.sin(angle) * r;
         const nz = Math.cos(angle) * r - radius;
@@ -2075,7 +2099,6 @@
         depth: depth,
         bevelEnabled: false
       });
-      // place stand behind lithophane
       standGeo.rotateX(-Math.PI / 2);
       standGeo.translate(0, minY + height * 0.5, -depth * 0.6);
 
@@ -2118,8 +2141,8 @@
 
       for (let y = 0; y < pxH; y++) {
         for (let x = 0; x < pxW; x++) {
-          const u = x / (pxW - 1);    // 0..1
-          const v = y / (pxH - 1);    // 0..1
+          const u = x / (pxW - 1);
+          const v = y / (pxH - 1);
           const px = (u - 0.5) * 2 * radius;
           const py = (v - 0.5) * 2 * radius;
           const rr = Math.sqrt(px * px + py * py);
@@ -2130,7 +2153,7 @@
           const dx = px * scale;
           const dy = py * scale;
 
-          const hVal = g[y * pxW + x]; // 0..1
+          const hVal = g[y * pxW + x];
           const thickness = (1 - hVal) * depth + tMinV;
 
           verts.push(dx, dy, dz + thickness);
@@ -2167,26 +2190,22 @@
 
       const depth = tMinV * 0.7 + 0.8;
 
-      // front
       const front = panel.clone();
       front.translate(0, 0, depth);
       geos.push(front);
 
-      // right
       const right = panel.clone();
       mat.makeRotationY(-Math.PI / 2);
       right.applyMatrix4(mat);
       right.translate(depth, 0, 0);
       geos.push(right);
 
-      // back
       const back = panel.clone();
       mat.makeRotationY(Math.PI);
       back.applyMatrix4(mat);
       back.translate(0, 0, -depth);
       geos.push(back);
 
-      // left
       const left = panel.clone();
       mat.makeRotationY(Math.PI / 2);
       left.applyMatrix4(mat);
@@ -2237,7 +2256,7 @@
       }
     }
 
-    /* ========== MAIN BUILD PIPELINE (fixed shape switching) ========== */
+    /* ========== MAIN BUILD PIPELINE WITH FIXED SHAPE ORDER ========== */
     async function buildLithophaneMesh() {
       const srcURL = cropDataURL || (srcImage && srcImage.src);
       if (!srcURL) {
@@ -2258,26 +2277,14 @@
 
       let geo;
 
-      if (shapeType.value !== "dome") {
+      if (shapeType.value === "dome") {
+        // Dome is a special case, built directly on spherical surface
+        geo = buildDomeGeometry(heightmap, Wmm, Hmm, tMinV, tMaxV);
+      } else {
+        // 1. Base flat panel
         geo = buildBasePanelGeometry(heightmap, Wmm, Hmm, tMinV, tMaxV);
 
-        if (shapeType.value === "cylinder") {
-          const radiusVal = Math.max(1, parseFloat(radiusInput.value) || 60);
-          applyCylinderWrap(geo, radiusVal, 1.0);
-        }
-
-        if (shapeType.value === "arc-cylinder") {
-          const radiusVal = Math.max(1, parseFloat(radiusInput.value) || 60);
-          const angleDeg = parseFloat(arcAngleInput.value) || 180;
-          const fract = Math.max(0.1, Math.min(1.0, angleDeg / 360));
-          applyCylinderWrap(geo, radiusVal, fract);
-        }
-
-        if (shapeType.value === "wave") {
-          const amp = parseFloat(waveAmpInput.value) || 0;
-          applyWave(geo, amp);
-        }
-
+        // 2. Border and structural elements (on flat geometry)
         const BW = parseFloat(bWidth.value) || 0;
         const BH = parseFloat(bHeight.value) || 0;
         if (BW > 0 && BH > 0) {
@@ -2302,13 +2309,25 @@
           );
         }
 
+        // 3. Box lamp: convert flat panel (with border/stand/ribs) into a 4-sided lamp
         if (shapeType.value === "box-lamp") {
           geo = buildBoxLampGeometry(geo, Wmm, Hmm, tMinV);
+        } else {
+          // 4. Deform into curved/wavy shapes LAST,
+          // so border/stand/ribs follow the curvature
+          if (shapeType.value === "cylinder" || shapeType.value === "arc-cylinder") {
+            const radiusVal = Math.max(1, parseFloat(radiusInput.value) || 60);
+            let arcFraction = 1.0;
+            if (shapeType.value === "arc-cylinder") {
+              const angleDeg = parseFloat(arcAngleInput.value) || 180;
+              arcFraction = Math.max(0.1, Math.min(1.0, angleDeg / 360));
+            }
+            applyCylinderWrap(geo, radiusVal, arcFraction);
+          } else if (shapeType.value === "wave") {
+            const amp = parseFloat(waveAmpInput.value) || 0;
+            applyWave(geo, amp);
+          }
         }
-      }
-
-      if (shapeType.value === "dome") {
-        geo = buildDomeGeometry(heightmap, Wmm, Hmm, tMinV, tMaxV);
       }
 
       const mat = createMaterial(currentMaterialPreset);
@@ -2342,7 +2361,7 @@
 
         const size = new THREE.Vector3();
         box.getSize(size);
-        const volume = size.x * size.y * size.z / 1000; // mm³ to cm³
+        const volume = size.x * size.y * size.z / 1000;
         mVol.textContent = volume.toFixed(2);
         mMass.textContent = (volume * 1.24).toFixed(2);
         const tris = mesh.geometry ? mesh.geometry.attributes.position.count / 3 : 0;
@@ -2386,15 +2405,14 @@
       const pos = geo.attributes.position.array;
       const norm = geo.attributes.normal.array;
       let overhangCount = 0;
-      let totalCount = pos.length / 9; // 3 verts per tri
+      let totalCount = pos.length / 9;
 
       const colors = new Float32Array(pos.length);
       for (let i = 0; i < pos.length; i += 9) {
         const nx = norm[i];
         const ny = norm[i+1];
         const nz = norm[i+2];
-        const angle = Math.acos(Math.abs(ny)); // normal vs up
-        // flag if angle > 60° from vertical (overhang threshold)
+        const angle = Math.acos(Math.abs(ny));
         const needSupport = angle > Math.PI / 3;
         const c = needSupport ? [1,0.2,0.2] : [0.3,0.3,0.3];
         if (needSupport) overhangCount++;
@@ -2630,12 +2648,13 @@
       notify(spinEnabled ? 'Auto-rotation enabled' : 'Auto-rotation disabled', 'info');
     });
 
-    /* ========== THEME TOGGLE (dark/light, same palette family) ========== */
+    /* ========== THEME TOGGLE (dark/light) ========== */
     let themeDark = true;
     $('btnThemeToggle').addEventListener('click', () => {
       themeDark = !themeDark;
       themeToggleBall.style.left = themeDark ? '2px' : '18px';
       document.body.classList.toggle('light-theme', !themeDark);
+      notify(themeDark ? 'Dark theme enabled' : 'Light theme enabled', 'info');
     });
 
     /* ========== PROJECT SAVE / LOAD ========== */
