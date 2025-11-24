@@ -1,108 +1,2750 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Litho3D Studio - Maintenance Notice</title>
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Litho3D | Designer Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
   <style>
     :root {
-      --bg: #f9f9fb;
-      --accent: #1e88e5;
-      --accent-dk: #1565c0;
-      --text: #2c3e50;
-      --radius: 12px;
-      --shadow: rgba(0,0,0,0.1);
+      --dark-bg: #10141b;
+      --dark-bg-soft: #151b24;
+      --dark-elevated: #181f2a;
+      --light-bg: #f1f2f6;
+      --white:   #ffffff;
+      --accent:  #34ace0;
+      --accent-soft: #1d9dd9;
+      --accent-dark: #227093;
+      --cta:     #ff6b6b;
+      --cta-dark:#ee5253;
+      --text:    #ecf0f1;
+      --text-muted: #a4b0be;
+      --border-subtle: #2f3645;
+      --radius:  12px;
+      --gap:     18px;
+      --transition-fast: 0.2s;
+      --transition-slow: 0.4s;
+      --shadow-soft: 0 12px 30px rgba(0,0,0,0.35);
+      --shadow-hard: 0 18px 40px rgba(0,0,0,0.55);
+      --success: #2ecc71;
+      --error: #e74c3c;
+      --warning: #f1c40f;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; height: 100%; }
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      height: 100%;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top, #20293a 0, #070a0f 45%, #05070b 100%);
+      color: var(--text);
+      line-height: 1.6;
+      padding-top: 60px;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* ===== HEADER / TOP BAR ===== */
+    header {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      background: linear-gradient(90deg, #05070b, #101826, #111827 70%);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.65);
+      z-index: 1000;
+    }
+    .navbar {
+      max-width: 1400px;
+      margin: auto;
+      display: flex;
       align-items: center;
-      height: 100vh;
-      text-align: center;
-      padding: 2rem;
-    }
-
-    .container {
-      background: #fff;
-      border-radius: var(--radius);
-      box-shadow: 0 8px 24px var(--shadow);
-      padding: 2rem 3rem;
-      max-width: 600px;
-    }
-
-    h1 {
+      justify-content: space-between;
+      padding: 0.6rem var(--gap);
       font-family: 'Montserrat', sans-serif;
-      margin-bottom: 1rem;
-      font-size: 1.8rem;
-      position: relative;
     }
-
-    h1::after {
-      content: '';
-      display: block;
-      width: 60px;
-      height: 3px;
-      background: var(--accent);
-      border-radius: 2px;
-      margin: 8px auto 0;
-    }
-
-    p {
-      font-size: 1rem;
-      margin-bottom: 2rem;
-      line-height: 1.5;
-      color: #555;
-    }
-
-    a.button {
-      display: inline-block;
-      padding: 0.8rem 1.6rem;
-      background: linear-gradient(45deg, var(--accent), var(--accent-dk));
-      color: white;
-      text-decoration: none;
-      border-radius: var(--radius);
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+      font-size: 1.35rem;
       font-weight: 600;
-      box-shadow: 0 4px 12px var(--shadow);
-      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.06em;
+    }
+    .logo-mark {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: conic-gradient(from 190deg, #34ace0, #1dd1a1, #ff9f43, #ff6b6b, #34ace0);
+      box-shadow: 0 0 18px rgba(52,172,224,0.6);
+      position: relative;
+      overflow: hidden;
+    }
+    .logo-mark::after {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border-radius: 6px;
+      background: radial-gradient(circle at 20% 0, rgba(255,255,255,0.25), transparent 60%);
     }
 
-    a.button:hover {
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 8px 20px var(--shadow), 0 0 10px rgba(30,136,229,0.3);
+    .top-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .top-chip {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.02);
+    }
+    .top-chip span.key {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+    }
+
+    .top-buttons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-top {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 999px;
+      padding: 0.35rem 0.8rem;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+    }
+    .btn-top:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.4);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .theme-toggle {
+      width: 34px;
+      height: 18px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 10%, #ffd76f, #ff9f43);
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.18);
+      cursor: pointer;
+    }
+    .theme-toggle-ball {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #111318;
+      top: 1px;
+      left: 2px;
+      transition: left var(--transition-fast), background var(--transition-fast);
+    }
+
+    /* ===== LAYOUT ===== */
+    #designer {
+      flex: 1;
+      padding: 18px var(--gap) 10px;
+    }
+    .designer-shell {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .designer-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+      gap: 10px;
+    }
+    .designer-top-row h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 1.6rem;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #f5f7fb;
+    }
+    .designer-top-row h2 span.sub {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .designer-main {
+      display: grid;
+      grid-template-columns: 340px minmax(0, 1.3fr) 260px;
+      gap: 14px;
+      align-items: stretch;
+    }
+    @media (max-width: 1150px) {
+      .designer-main {
+        grid-template-columns: 320px minmax(0, 1fr);
+        grid-template-rows: auto auto;
+      }
+      .side-right {
+        grid-column: 1 / -1;
+        order: 3;
+      }
+    }
+    @media (max-width: 860px) {
+      body { padding-top: 64px; }
+      .designer-main {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto auto;
+      }
+    }
+
+    .panel {
+      background: radial-gradient(circle at top left, #20283a, #10151f 55%, #05070c 100%);
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.05);
+      box-shadow: var(--shadow-soft);
+      padding: 0.9rem 0.95rem 0.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .panel::before {
+      content: '';
+      position: absolute;
+      inset: -120px -120px auto auto;
+      background: radial-gradient(circle at 10% 0, rgba(52,172,224,0.18), transparent 60%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    .panel-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .panel-title-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #34ace0, transparent 70%);
+      box-shadow: 0 0 10px rgba(52,172,224,0.7);
+    }
+    .panel-header-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chip-small {
+      font-size: 0.7rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--text-muted);
+      background: rgba(0,0,0,0.35);
+    }
+
+    .panel-body {
+      position: relative;
+      z-index: 1;
+      margin-top: 0.4rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 0.55rem;
+    }
+    .tab-btn {
+      flex: 1 1 0;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 0.32rem 0.5rem;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      background: rgba(0,0,0,0.35);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all var(--transition-fast);
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--accent-soft), var(--accent-dark));
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.05), 0 12px 24px rgba(0,0,0,0.7);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+    .tab-panel.active {
+      display: block;
+    }
+
+    .field {
+      display: grid;
+      grid-template-columns: 1fr 95px;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 0.8rem;
+    }
+    .field.wide {
+      grid-template-columns: 1fr;
+    }
+    .field label {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+    .field input[type="number"],
+    .field input[type="range"],
+    .field input[type="text"],
+    .field select {
+      width: 100%;
+      padding: 0.35rem 0.45rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(3,7,15,0.85);
+      font-size: 0.8rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+    }
+    .field input[type="number"]:focus,
+    .field input[type="text"]:focus,
+    .field select:focus {
+      border-color: rgba(52,172,224,0.9);
+      box-shadow: 0 0 0 1px rgba(52,172,224,0.6);
+      background: rgba(7,11,19,0.95);
+    }
+    .field input[type="checkbox"] {
+      transform: scale(1.05);
+      accent-color: var(--accent-soft);
+      cursor: pointer;
+      justify-self: start;
+    }
+    .field small {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+    }
+
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0.45rem 0.85rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
+      font-size: 0.75rem;
+      color: #fefefe;
+      border-radius: 10px;
+      border: 0;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent-soft), var(--accent-dark));
+      box-shadow: 0 10px 24px rgba(0,0,0,0.7);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), opacity var(--transition-fast);
+      white-space: nowrap;
+    }
+    .btn span.icon {
+      font-size: 0.85rem;
+    }
+    .btn.secondary {
+      background: linear-gradient(135deg, var(--cta), var(--cta-dark));
+    }
+    .btn.ghost {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: none;
+      color: var(--text-muted);
+    }
+    .btn.full {
+      width: 100%;
+      justify-content: center;
+    }
+    .btn:disabled {
+      opacity: 0.3;
+      cursor: default;
+      box-shadow: none;
+    }
+    .btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-hard);
+    }
+    .btn:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.7);
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    .subtle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ===== CAD TOOLBAR ===== */
+    .cad-toolbar {
+      display: flex;
+      gap: 6px;
+      padding: 4px 6px 6px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: radial-gradient(circle at top, rgba(52,172,224,0.15), rgba(1,4,10,0.95));
+      margin-bottom: 6px;
+      align-items: center;
+    }
+    .cad-tool-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(0,0,0,0.3);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast), color var(--transition-fast);
+    }
+    .cad-tool-btn.active {
+      background: linear-gradient(135deg, var(--accent-soft), var(--accent-dark));
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.7);
+    }
+    .cad-tool-btn:hover {
+      transform: translateY(-1px);
+    }
+    .cad-toolbar-sep {
+      width: 1px;
+      height: 18px;
+      background: rgba(255,255,255,0.12);
+      margin: 0 4px;
+    }
+
+    /* ===== SHAPE THUMBNAIL ===== */
+    .shape-row {
+      display: grid;
+      grid-template-columns: minmax(0,1.2fr) minmax(0,1fr);
+      gap: 8px;
+      align-items: stretch;
+      margin-bottom: 6px;
+    }
+    .shape-thumb {
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: radial-gradient(circle at top, rgba(52,172,224,0.14), rgba(5,7,12,0.98));
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .shape-thumb-title {
+      font-size: 0.78rem;
+      font-family: 'Montserrat', sans-serif;
+      color: #f1f2f6;
+      margin-bottom: 2px;
+    }
+    .shape-thumb-mini {
+      height: 42px;
+      border-radius: 8px;
+      border: 1px dashed rgba(255,255,255,0.28);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    /* ===== PREVIEW PANEL ===== */
+    #preview {
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.08);
+      background: radial-gradient(circle at 5% 0, #162032, #05070d 50%, #030409 100%);
+      box-shadow: var(--shadow-hard);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 320px;
+    }
+    #preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.45rem 0.7rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: radial-gradient(circle at 10% 0, rgba(52,172,224,0.12), transparent 55%);
+      z-index: 2;
+    }
+    #preview-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #preview-header-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    #preview-size {
+      border-radius: 999px;
+      padding: 0 0.55rem;
+      height: 22px;
+      font-size: 0.72rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(3,8,16,0.95);
+      color: var(--text);
+    }
+
+    .cam-preset {
+      background: rgba(0,0,0,0.28);
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      height: 22px;
+      padding: 0 0.4rem;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+    }
+    .cam-preset:hover {
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      border-color: rgba(255,255,255,0.32);
+      transform: translateY(-0.5px);
+    }
+
+    #canvas-wrap {
+      flex: 1 1 auto;
+      position: relative;
+      overflow: hidden;
+    }
+    #canvas3d {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .preview-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0.4rem 0.6rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      background: linear-gradient(to top, rgba(0,0,0,0.55), transparent 50%);
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+    }
+    #preview:hover .preview-overlay {
+      opacity: 1;
+    }
+
+    /* ===== METRICS / STATUS ===== */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .metric {
+      border-radius: 9px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.35);
+      padding: 0.45rem 0.5rem;
+      font-size: 0.74rem;
+    }
+    .metric b {
+      font-size: 0.76rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .metric span.value {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.8rem;
+      color: #f9fbff;
+    }
+
+    .status-bar {
+      margin-top: 4px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ===== UNDO TIMELINE ===== */
+    .timeline {
+      margin-top: 4px;
+      max-height: 100px;
+      overflow-y: auto;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(1,4,10,0.7);
+      padding: 4px 4px 4px 0;
+      font-size: 0.7rem;
+    }
+    .timeline-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 6px 3px 10px;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .timeline-item span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(52,172,224,0.9);
+    }
+    .timeline-item.active {
+      background: rgba(52,172,224,0.15);
+      color: #f1f2f6;
+    }
+    .timeline-item:hover {
+      background: rgba(255,255,255,0.04);
     }
 
     footer {
-      font-size: 0.85rem;
-      color: #7f8c8d;
-      margin-top: 1.5rem;
+      max-width: 1400px;
+      margin: 0 auto 12px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 4px 16px 0;
+    }
+    footer a {
+      color: var(--accent);
+    }
+
+    /* ===== NOTIFICATION ===== */
+    .notification {
+      position: fixed;
+      top: 72px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.55rem 1.25rem;
+      border-radius: 999px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.8rem;
+      color: #fff;
+      z-index: 3000;
+      display: none;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.65);
+      transition: opacity var(--transition-fast) ease-in-out, transform var(--transition-fast) ease-in-out;
+      max-width: 80vw;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+    .notification.success { display: block; background: linear-gradient(135deg, #2ecc71, #27ae60); opacity: 1; transform: translateX(-50%) translateY(0); }
+    .notification.error { display: block; background: linear-gradient(135deg, #e74c3c, #c0392b); opacity: 1; transform: translateX(-50%) translateY(0); }
+    .notification.info { display: block; background: linear-gradient(135deg, #3498db, #2980b9); opacity: 1; transform: translateX(-50%) translateY(0); }
+    .notification.hide { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+
+    /* ===== MODAL (CROPPER) ===== */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .modal.active { display: flex; }
+    .modal-card {
+      background: #05070c;
+      width: min(94vw, 1000px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-hard);
+      padding: 0.85rem;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--text);
+    }
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+    }
+    .modal-head h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .modal-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.9fr);
+      gap: 12px;
+    }
+    @media (max-width: 900px) {
+      .modal-body {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    .cropper-wrap {
+      background: #000;
+      min-height: 360px;
+      border-radius: 8px;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+    .cropper-wrap img { max-width: 100%; display: block; }
+
+    /* ===== FULLSCREEN ===== */
+    .fullscreen-active #preview {
+      position: fixed;
+      inset: 60px 10px 10px 10px;
+      z-index: 1500;
+      border-radius: 14px;
+    }
+    .fullscreen-active body {
+      overflow: hidden;
+    }
+
+    /* ===== LIGHT THEME OVERRIDE (same color scheme, slightly lifted) ===== */
+    body.light-theme {
+      background: radial-gradient(circle at top, #252f44 0, #0a0f19 45%, #05070b 100%);
+      color: var(--text);
+    }
+    body.light-theme .panel {
+      background: radial-gradient(circle at top left, #243049, #141a26 55%, #060810 100%);
+      border-color: rgba(255,255,255,0.08);
+    }
+    body.light-theme #preview {
+      background: radial-gradient(circle at 5% 0, #1c2940, #060910 50%, #04060d 100%);
+    }
+    body.light-theme .metric,
+    body.light-theme .timeline {
+      background: rgba(0,0,0,0.4);
+      border-color: rgba(255,255,255,0.12);
+    }
+    body.light-theme .btn-top,
+    body.light-theme .cad-toolbar,
+    body.light-theme .cad-tool-btn {
+      border-color: rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.4);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Litho3D Studio</h1>
-    <p>
-      We’re currently fixing a bug with the Lithophane selling platform. For any inquiries, please contact <a href="emailto:sunmayp@gmail.com">sunmayp@gmail.com</a><br>
-      If you’d like to make  one while we get things working again, click below.
-    </p>
-    <a class="button" href="https://litho3d.studio/designer.html" target="_blank">
-      Visit Platform
-    </a> 
-    <footer>© 2025 Litho3D Studio. All rights reserved.</footer>
+  <div class="notification" id="notification"></div>
+
+  <header>
+    <nav class="navbar">
+      <div class="logo">
+        <div class="logo-mark"></div>
+        <span>Litho3D</span>
+      </div>
+
+      <div class="top-tools">
+        <div class="top-chip">
+          <span>Transform</span>
+          <span class="key">W</span>
+          <span class="key">E</span>
+          <span class="key">R</span>
+        </div>
+        <div class="top-chip">
+          <span>Undo</span>
+          <span class="key">Ctrl</span>
+          <span class="key">Z</span>
+        </div>
+        <div class="top-chip">
+          <span>Redo</span>
+          <span class="key">Ctrl</span>
+          <span class="key">Y</span>
+        </div>
+      </div>
+
+      <div class="top-buttons">
+        <button id="btnVisitStore" class="btn-top">
+          <span>Visit Store</span>
+        </button>
+        <button id="btnResetCamera" class="btn-top">
+          <span>Reset camera</span>
+        </button>
+        <button id="btnThemeToggle" class="btn-top" title="Theme">
+          <div class="theme-toggle">
+            <div class="theme-toggle-ball"></div>
+          </div>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <section id="designer">
+    <div class="designer-shell">
+      <div class="designer-top-row">
+        <h2>
+          Designer
+          <span class="sub">Generate pro-grade lithophane STLs.</span>
+        </h2>
+      </div>
+
+      <div class="designer-main">
+        <!-- LEFT PANEL: IMAGE + HEIGHTMAP -->
+        <div class="panel side-left" id="leftPanel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <div class="panel-title-dot"></div>
+              <span>Image & Heightmap</span>
+            </div>
+            <div class="panel-header-right">
+              <span class="chip-small" id="chipImageState">No image</span>
+            </div>
+          </div>
+
+          <div class="panel-body">
+            <div class="tabs">
+              <button class="tab-btn active" data-tab="tab-image">Image</button>
+              <button class="tab-btn" data-tab="tab-map">Map</button>
+            </div>
+
+            <!-- TAB: IMAGE -->
+            <div class="tab-panel active" id="tab-image">
+              <div class="field wide">
+                <label for="imgInput">Source image (JPG/PNG). High contrast works best.</label>
+                <input id="imgInput" type="file" accept="image/*" />
+              </div>
+              <div class="row">
+                <button id="btnCrop" class="btn" disabled>
+                  <span class="icon">✂</span><span>Crop</span>
+                </button>
+                <button id="btnAuto" class="btn ghost" disabled>
+                  <span class="icon">✨</span><span>Auto enhance</span>
+                </button>
+                <button id="btnReload" class="btn ghost" disabled>
+                  <span class="icon">⟳</span><span>Reload</span>
+                </button>
+              </div>
+              <p class="subtle">Tip: crop tight around faces or the subject. Use auto enhance to stretch contrast. Drag & drop an image anywhere to load it.</p>
+
+              <hr style="border:0;border-top:1px solid rgba(255,255,255,0.1);margin:7px 0 6px;">
+
+              <div class="field">
+                <label>Width (mm)</label>
+                <input id="mmW" type="number" min="20" max="400" step="1" value="120"/>
+              </div>
+              <div class="field">
+                <label>Height (mm)</label>
+                <input id="mmH" type="number" min="20" max="400" step="1" value="90"/>
+              </div>
+              <div class="field">
+                <label>Pixels per mm</label>
+                <input id="ppm" type="number" min="1" max="5" step="0.5" value="2"/>
+              </div>
+            </div>
+
+            <!-- TAB: HEIGHTMAP -->
+            <div class="tab-panel" id="tab-map">
+              <div class="field">
+                <label>Min thickness (mm)</label>
+                <input id="tMin" type="number" min="0.4" max="3.0" step="0.1" value="0.8"/>
+              </div>
+              <div class="field">
+                <label>Max thickness (mm)</label>
+                <input id="tMax" type="number" min="1.0" max="8.0" step="0.1" value="3.2"/>
+              </div>
+              <div class="field">
+                <label>Gamma</label>
+                <input id="gamma" type="number" min="0.2" max="3.0" step="0.1" value="1.4"/>
+              </div>
+              <div class="field">
+                <label>Blur radius (px)</label>
+                <input id="blurRadius" type="number" min="0" max="4" step="1" value="1"/>
+              </div>
+              <div class="field">
+                <label>Invert lights/darks</label>
+                <input id="invert" type="checkbox"/>
+              </div>
+              <div class="field">
+                <label>Flip vertically (for backlighting)</label>
+                <input id="flipY" type="checkbox"/>
+              </div>
+              <div class="field">
+                <label>Heatmap overlay</label>
+                <input id="heatmapToggle" type="checkbox"/>
+              </div>
+              <p class="subtle">Heatmap is exported as PNG. In preview, backlight + lighting shows contrast.</p>
+            </div>
+
+            <hr style="border:0;border-top:1px solid rgba(255,255,255,0.1);margin:7px 0 6px;">
+
+            <div class="row">
+              <button id="btnPreview" class="btn full">
+                <span class="icon">▶</span><span>Generate preview</span>
+              </button>
+            </div>
+
+            <div class="subtle" style="margin-top:4px;">Project:
+              <button id="btnSaveProject" class="btn ghost" style="padding:0.2rem 0.5rem;font-size:0.7rem;">Save JSON</button>
+              <button id="btnLoadProject" class="btn ghost" style="padding:0.2rem 0.5rem;font-size:0.7rem;">Load JSON</button>
+              <input type="file" id="projectFile" accept="application/json" style="display:none;">
+            </div>
+          </div>
+        </div>
+
+        <!-- CENTER: PREVIEW + CAD TOOLBAR -->
+        <div class="panel preview-center" id="centerPanel">
+          <div class="cad-toolbar">
+            <button class="cad-tool-btn active" id="toolSelect" title="Select (click objects)">
+              ⭘
+            </button>
+            <button class="cad-tool-btn" id="toolTranslate" title="Move (W)">
+              ⛶
+            </button>
+            <button class="cad-tool-btn" id="toolRotate" title="Rotate (R)">
+              ⟳
+            </button>
+            <button class="cad-tool-btn" id="toolScale" title="Scale (E)">
+              ⇲
+            </button>
+            <div class="cad-toolbar-sep"></div>
+            <button class="cad-tool-btn" id="toolSpin" title="Toggle auto-spin">
+              ⤾
+            </button>
+            <button class="cad-tool-btn" id="toolScreenshot" title="Download screenshot">
+              📷
+            </button>
+            <button class="cad-tool-btn" id="toolAutoOrient" title="Auto-orient for printing">
+              ⊥
+            </button>
+          </div>
+
+          <div id="preview">
+            <div id="preview-header">
+              <div id="preview-header-left">
+                <span style="font-size:0.76rem;color:#dfe4ea;">3D preview</span>
+                <span style="font-size:0.72rem;color:var(--text-muted);" id="previewStatus">Idle</span>
+              </div>
+              <div id="preview-header-right">
+                <select id="preview-size">
+                  <option value="s">S</option>
+                  <option value="m" selected>M</option>
+                  <option value="l">L</option>
+                </select>
+                <button class="cam-preset" data-cam="front">Front</button>
+                <button class="cam-preset" data-cam="iso">Iso</button>
+                <button class="cam-preset" data-cam="top">Top</button>
+                <button id="btnFullscreen" class="cam-preset" title="Fullscreen">
+                  <span>⤢</span>
+                </button>
+              </div>
+            </div>
+
+            <div id="canvas-wrap">
+              <canvas id="canvas3d"></canvas>
+              <div class="preview-overlay">
+                <div>
+                  <span id="overlayInfo">No mesh</span>
+                </div>
+                <div>
+                  <span>Orbit: drag • Scroll: zoom • Shift + drag: pan</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL: SHAPE / STRUCTURE / LIGHTING / EXPORT -->
+        <div class="panel side-right" id="rightPanel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <div class="panel-title-dot"></div>
+              <span>Shape, Material & Export</span>
+            </div>
+            <div class="panel-header-right">
+              <span class="chip-small" id="chipMeshState">No mesh</span>
+            </div>
+          </div>
+
+          <div class="panel-body">
+            <div class="tabs">
+              <button class="tab-btn active" data-tab="tab-shape">Shape</button>
+              <button class="tab-btn" data-tab="tab-struct">Structure</button>
+              <button class="tab-btn" data-tab="tab-light">Lighting</button>
+              <button class="tab-btn" data-tab="tab-scene">Scene</button>
+            </div>
+
+            <!-- SHAPE TAB -->
+            <div class="tab-panel active" id="tab-shape">
+              <div class="shape-row">
+                <div class="field">
+                  <label>Shape</label>
+                  <select id="shapeType">
+                    <option value="flat-rect" selected>Flat rectangle</option>
+                    <option value="cylinder">Cylinder wrap</option>
+                    <option value="arc-cylinder">Arc cylinder</option>
+                    <option value="dome">Dome</option>
+                    <option value="box-lamp">Box lamp (4 sides)</option>
+                    <option value="wave">Wavy panel</option>
+                  </select>
+                </div>
+                <div class="shape-thumb">
+                  <div class="shape-thumb-mini" id="shapeThumbMini">▭</div>
+                  <div class="shape-thumb-title" id="shapeThumbTitle">Flat rectangle</div>
+                  <div id="shapeThumbDesc">Simple panel, good for frames and plaques.</div>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Cylinder radius (mm)</label>
+                <input id="radius" type="number" min="0" max="400" step="1" value="0"/>
+              </div>
+              <div class="field">
+                <label>Arc angle (°) (arc)</label>
+                <input id="arcAngle" type="number" min="30" max="360" step="5" value="180"/>
+              </div>
+              <div class="field">
+                <label>Wave amplitude (mm)</label>
+                <input id="waveAmp" type="number" min="0" max="15" step="0.5" value="4"/>
+              </div>
+              <div class="field">
+                <label>Border width (mm)</label>
+                <input id="bWidth" type="number" min="0" max="10" step="0.5" value="2"/>
+              </div>
+              <div class="field">
+                <label>Border height (mm)</label>
+                <input id="bHeight" type="number" min="0" max="8" step="0.5" value="2"/>
+              </div>
+
+              <div class="field">
+                <label>Material preset</label>
+                <select id="materialPreset">
+                  <option value="pla-white">PLA white</option>
+                  <option value="pla-translucent">PLA translucent</option>
+                  <option value="resin">Resin</option>
+                  <option value="glow">Glow effect</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- STRUCTURE TAB -->
+            <div class="tab-panel" id="tab-struct">
+              <div class="field">
+                <label>Add stand</label>
+                <input id="addStand" type="checkbox"/>
+              </div>
+              <div class="field">
+                <label>Stand depth (mm)</label>
+                <input id="standDepth" type="number" min="5" max="60" step="1" value="20"/>
+              </div>
+              <div class="field">
+                <label>Stand thickness (mm)</label>
+                <input id="standThick" type="number" min="2" max="10" step="0.5" value="4"/>
+              </div>
+              <div class="field">
+                <label>Back ribs</label>
+                <input id="addRibs" type="checkbox"/>
+              </div>
+              <div class="field">
+                <label>Rib spacing (mm)</label>
+                <input id="ribSpacing" type="number" min="10" max="40" step="2" value="20"/>
+              </div>
+              <div class="field">
+                <label>Support preview</label>
+                <input id="supportPreview" type="checkbox"/>
+              </div>
+              <p class="subtle" id="supportInfo">Toggle support preview to estimate overhang areas.</p>
+            </div>
+
+            <!-- LIGHTING TAB -->
+            <div class="tab-panel" id="tab-light">
+              <div class="field">
+                <label>Key light intensity</label>
+                <input id="keyLightIntensity" type="range" min="0" max="2" step="0.05" value="1.2"/>
+              </div>
+              <div class="field">
+                <label>Ambient light</label>
+                <input id="ambientIntensity" type="range" min="0" max="1.5" step="0.05" value="0.5"/>
+              </div>
+              <div class="field">
+                <label>Backlight brightness</label>
+                <input id="backlightIntensity" type="range" min="0" max="3" step="0.1" value="1.5"/>
+              </div>
+              <div class="field">
+                <label>Backlight color</label>
+                <input id="backlightColor" type="color" value="#ffffff"/>
+              </div>
+              <div class="field">
+                <label>Shadow mode</label>
+                <input id="shadowMode" type="checkbox"/>
+              </div>
+              <p class="subtle">Use shadow mode to see how details read in a real scene.</p>
+            </div>
+
+            <!-- SCENE TAB -->
+            <div class="tab-panel" id="tab-scene">
+              <div class="row">
+                <button id="btnAddText" class="btn full">
+                  <span class="icon">T</span><span>Add 3D text</span>
+                </button>
+              </div>
+              <div class="row">
+                <button id="btnCenterLitho" class="btn ghost full">
+                  <span class="icon">◎</span><span>Center</span>
+                </button>
+              </div>
+              <div class="row">
+                <button id="btnDropToFloor" class="btn ghost full">
+                  <span class="icon">▾</span><span>Drop to floor</span>
+                </button>
+              </div>
+              <p class="subtle">Select object by clicking it in the preview. Use W/E/R or CAD toolbar to move, scale, rotate.</p>
+              <p class="subtle" style="margin-top:6px;">History:</p>
+              <div class="timeline" id="timeline"></div>
+            </div>
+
+            <hr style="border:0;border-top:1px solid rgba(255,255,255,0.1);margin:7px 0 6px;">
+
+            <div class="metrics">
+              <div class="metric">
+                <b>Triangles</b>
+                <span id="mTris" class="value">0</span>
+              </div>
+              <div class="metric">
+                <b>Volume (cm³)</b>
+                <span id="mVol" class="value">0.00</span>
+              </div>
+              <div class="metric">
+                <b>Mass (g)</b>
+                <span id="mMass" class="value">0.00</span>
+              </div>
+              <div class="metric">
+                <b>Mesh density</b>
+                <span id="mDensity" class="value">–</span>
+              </div>
+            </div>
+            <div class="status-bar">
+              <span id="statusLeft">PLA 1.24 g/cm³</span>
+              <span id="statusRight">FPS: <span id="fpsLabel">–</span></span>
+            </div>
+
+            <hr style="border:0;border-top:1px solid rgba(255,255,255,0.1);margin:7px 0 6px;">
+
+            <div class="row">
+              <button id="btnExport" class="btn secondary">
+                <span class="icon">⬇</span><span>Download STL</span>
+              </button>
+              <button id="btnHeightmap" class="btn ghost">
+                <span class="icon">⬇</span><span>Heightmap PNG</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>© 2025 Litho3D. All rights reserved. Built by Sunmay Padiyar.</p>
+      </footer>
+    </div>
+  </section>
+
+  <!-- CROPPER MODAL -->
+  <div class="modal" id="cropperModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>Crop & rotate</h3>
+        <button id="closeCrop" class="btn ghost" style="padding:0.3rem 0.6rem;font-size:0.75rem;">Close</button>
+      </div>
+      <div class="modal-body">
+        <div class="cropper-wrap">
+          <img id="cropImg" alt="crop source"/>
+        </div>
+        <div>
+          <div class="row">
+            <button id="cropRotateL" class="btn">
+              <span class="icon">⟲</span><span>Rotate left</span>
+            </button>
+            <button id="cropRotateR" class="btn">
+              <span class="icon">⟳</span><span>Rotate right</span>
+            </button>
+            <button id="cropReset" class="btn ghost">
+              <span class="icon">⟲</span><span>Reset</span>
+            </button>
+          </div>
+
+          <div class="field">
+            <label>Aspect lock</label>
+            <select id="aspect">
+              <option value="free">Free</option>
+              <option value="4:3">4:3</option>
+              <option value="3:2">3:2</option>
+              <option value="16:9">16:9</option>
+              <option value="1:1">1:1</option>
+            </select>
+          </div>
+          <div class="row">
+            <button id="applyCrop" class="btn secondary full">
+              <span class="icon">✔</span><span>Apply crop</span>
+            </button>
+          </div>
+          <p class="subtle">The cropped region is used to compute the heightmap and all shapes.</p>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- LIBS -->
+  <script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
+  <link href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/STLExporter.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/TransformControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/BufferGeometryUtils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
+
+  <script>
+    /* ========== SMALL UTILS ========== */
+    const notify = (msg, type = 'success') => {
+      const el = document.getElementById('notification');
+      el.textContent = msg;
+      el.className = 'notification ' + type;
+      setTimeout(() => {
+        el.className = 'notification hide';
+        setTimeout(() => {
+          el.className = 'notification';
+          el.textContent = '';
+        }, 300);
+      }, 2600);
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    /* ========== ELEMENT HOOKUP ========== */
+    const imgInput = $('imgInput');
+    const btnCrop = $('btnCrop');
+    const btnAuto = $('btnAuto');
+    const btnReload = $('btnReload');
+    const btnPreview = $('btnPreview');
+    const btnExport = $('btnExport');
+    const btnHeightmap = $('btnHeightmap');
+    const btnAddText = $('btnAddText');
+    const btnCenterLitho = $('btnCenterLitho');
+    const btnDropToFloor = $('btnDropToFloor');
+    const btnFullscreen = $('btnFullscreen');
+    const btnResetCamera = $('btnResetCamera');
+    const btnVisitStore = $('btnVisitStore');
+    const previewSizeSel = $('preview-size');
+    const chipImageState = $('chipImageState');
+    const chipMeshState = $('chipMeshState');
+    const overlayInfo = $('overlayInfo');
+    const previewStatus = $('previewStatus');
+    const fpsLabel = $('fpsLabel');
+    const btnSaveProject = $('btnSaveProject');
+    const btnLoadProject = $('btnLoadProject');
+    const projectFile = $('projectFile');
+
+    // CAD toolbar
+    const toolSelect = $('toolSelect');
+    const toolTranslate = $('toolTranslate');
+    const toolRotate = $('toolRotate');
+    const toolScale = $('toolScale');
+    const toolSpin = $('toolSpin');
+    const toolScreenshot = $('toolScreenshot');
+    const toolAutoOrient = $('toolAutoOrient');
+
+    const mmW = $('mmW');
+    const mmH = $('mmH');
+    const ppm = $('ppm');
+    const tMin = $('tMin');
+    const tMax = $('tMax');
+    const gammaInput = $('gamma');
+    const blurRadius = $('blurRadius');
+    const invert = $('invert');
+    const flipY = $('flipY');
+    const heatmapToggle = $('heatmapToggle');
+
+    const shapeType = $('shapeType');
+    const radiusInput = $('radius');
+    const arcAngleInput = $('arcAngle');
+    const waveAmpInput = $('waveAmp');
+    const bWidth = $('bWidth');
+    const bHeight = $('bHeight');
+
+    const materialPreset = $('materialPreset');
+
+    const addStand = $('addStand');
+    const standDepth = $('standDepth');
+    const standThick = $('standThick');
+    const addRibs = $('addRibs');
+    const ribSpacing = $('ribSpacing');
+    const supportPreview = $('supportPreview');
+    const supportInfo = $('supportInfo');
+
+    const keyLightIntensityInput = $('keyLightIntensity');
+    const ambientIntensityInput = $('ambientIntensity');
+    const backlightIntensityInput = $('backlightIntensity');
+    const backlightColorInput = $('backlightColor');
+    const shadowModeInput = $('shadowMode');
+
+    const mTris = $('mTris');
+    const mVol = $('mVol');
+    const mMass = $('mMass');
+    const mDensity = $('mDensity');
+
+    const previewPanel = $('preview');
+    const canvas3d = $('canvas3d');
+    const shapeThumbMini = $('shapeThumbMini');
+    const shapeThumbTitle = $('shapeThumbTitle');
+    const shapeThumbDesc = $('shapeThumbDesc');
+    const themeToggleBall = document.querySelector('.theme-toggle-ball');
+    const timelineEl = $('timeline');
+
+    /* Visit Store click (simple external link; edit URL as needed) */
+    if (btnVisitStore) {
+      btnVisitStore.addEventListener('click', () => {
+        window.open('https://litho3d.com/store.html', '_blank');
+      });
+    }
+
+    /* ========== TAB SWITCHING ========== */
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        const panel = document.getElementById(tab);
+        if (!panel) return;
+        // deactivate siblings in this group
+        const parentTabs = btn.parentElement;
+        parentTabs.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const panelContainer = parentTabs.parentElement.parentElement; // panel-body -> panel
+        panelContainer.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        panel.classList.add('active');
+      });
+    });
+
+    /* ========== SHAPE THUMBNAIL TEXTS ========== */
+    const shapeMeta = {
+      'flat-rect': {
+        icon: '▭',
+        title: 'Flat rectangle',
+        desc: 'Standard panel for frames, plaques, and nightlights.'
+      },
+      'cylinder': {
+        icon: '◔',
+        title: 'Cylinder wrap',
+        desc: 'Full wrap around a cylinder. Great for lamp sleeves and vases.'
+      },
+      'arc-cylinder': {
+        icon: '∩',
+        title: 'Arc cylinder',
+        desc: 'Curved arc segment with adjustable angle. Good for stand-up arcs.'
+      },
+      'dome': {
+        icon: '◠',
+        title: 'Dome',
+        desc: 'Hemisphere-style dome. Strong sense of depth under backlight.'
+      },
+      'box-lamp': {
+        icon: '⬡',
+        title: 'Box lamp',
+        desc: 'Makes 4 panels for a cube-style lamp shade.'
+      },
+      'wave': {
+        icon: '≈',
+        title: 'Wavy panel',
+        desc: 'Sinusoidal wave surface for a dynamic sculpted effect.'
+      }
+    };
+    function updateShapeThumb() {
+      const meta = shapeMeta[shapeType.value];
+      if (!meta) return;
+      shapeThumbMini.textContent = meta.icon;
+      shapeThumbTitle.textContent = meta.title;
+      shapeThumbDesc.textContent = meta.desc;
+    }
+    shapeType.addEventListener('change', updateShapeThumb);
+    updateShapeThumb();
+
+    /* ========== CROPPER SETUP ========== */
+    const cropperModal = $('cropperModal');
+    const cropImg = $('cropImg');
+    const closeCrop = $('closeCrop');
+    const applyCrop = $('applyCrop');
+    const aspectSel = $('aspect');
+    let cropper = null;
+
+    let originalImageFile = null;
+    let srcImage = null;
+    let cropDataURL = null;
+    let lastHeightData = null; // {width,height,values}
+    let spinEnabled = false;
+    let supportOverlay = null;
+    let currentMaterialPreset = 'pla-white';
+
+    imgInput.addEventListener('change', (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      loadImageFile(f);
+    });
+
+    function loadImageFile(file) {
+      originalImageFile = file;
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        srcImage = img;
+        cropDataURL = img.src;
+        btnCrop.disabled = false;
+        btnAuto.disabled = false;
+        btnReload.disabled = false;
+        chipImageState.textContent = `Loaded ${img.naturalWidth}×${img.naturalHeight}`;
+        chipImageState.style.color = '#2ecc71';
+
+        const ar = img.naturalHeight ? img.naturalHeight / img.naturalWidth : 0.75;
+        const wmm = parseFloat(mmW.value) || 120;
+        mmH.value = (wmm * ar).toFixed(1);
+        notify('Image loaded', 'info');
+      };
+      img.onerror = () => notify('Failed to load image', 'error');
+      img.src = url;
+    }
+
+    // Drag & drop image
+    ['dragenter','dragover','dragleave','drop'].forEach(eventName => {
+      document.addEventListener(eventName, e => {
+        e.preventDefault();
+        e.stopPropagation();
+      }, false);
+    });
+    document.addEventListener('drop', e => {
+      const dt = e.dataTransfer;
+      if (!dt || !dt.files || !dt.files[0]) return;
+      const f = dt.files[0];
+      if (!f.type.startsWith('image/')) {
+        notify('Drop an image file', 'error');
+        return;
+      }
+      loadImageFile(f);
+    });
+
+    btnReload.addEventListener('click', () => {
+      if (!originalImageFile) return notify('No image to reload', 'error');
+      loadImageFile(originalImageFile);
+    });
+
+    btnCrop.addEventListener('click', () => {
+      if (!srcImage) return;
+      cropperModal.classList.add('active');
+      cropImg.src = cropDataURL;
+      setTimeout(() => {
+        if (cropper) cropper.destroy();
+        cropper = new Cropper(cropImg, {
+          viewMode: 1,
+          dragMode: 'move',
+          autoCropArea: 1,
+          background: false
+        });
+      }, 50);
+    });
+
+    closeCrop.addEventListener('click', () => cropperModal.classList.remove('active'));
+
+    applyCrop.addEventListener('click', () => {
+      if (!cropper) return;
+      const cvs = cropper.getCroppedCanvas({ imageSmoothingQuality: 'high' });
+      cropDataURL = cvs.toDataURL('image/png', 1.0);
+      srcImage = new Image();
+      srcImage.onload = () => {
+        chipImageState.textContent = `Cropped ${srcImage.naturalWidth}×${srcImage.naturalHeight}`;
+        chipImageState.style.color = '#2ecc71';
+      };
+      srcImage.src = cropDataURL;
+      cropperModal.classList.remove('active');
+      notify('Crop applied', 'success');
+    });
+
+    $('cropRotateL').onclick = () => cropper && cropper.rotate(-90);
+    $('cropRotateR').onclick = () => cropper && cropper.rotate(90);
+    $('cropReset').onclick = () => cropper && cropper.reset();
+
+    aspectSel.addEventListener('change', () => {
+      if (!cropper) return;
+      const v = aspectSel.value;
+      let ratio = NaN;
+      if (v !== 'free') {
+        const parts = v.split(':');
+        ratio = parseFloat(parts[0]) / parseFloat(parts[1]);
+      }
+      cropper.setAspectRatio(ratio);
+    });
+
+    /* ========== AUTO ENHANCE ========== */
+    btnAuto.addEventListener('click', () => {
+      if (!cropDataURL && !srcImage) return notify('Load an image first', 'error');
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = data.data;
+        let min = 255, max = 0;
+        for (let i = 0; i < pixels.length; i += 4) {
+          const v = 0.299 * pixels[i] + 0.587 * pixels[i + 1] + 0.114 * pixels[i + 2];
+          if (v < min) min = v;
+          if (v > max) max = v;
+        }
+        const range = max - min || 1;
+        for (let i = 0; i < pixels.length; i += 4) {
+          let r = (pixels[i] - min) / range * 255;
+          let g = (pixels[i + 1] - min) / range * 255;
+          let b = (pixels[i + 2] - min) / range * 255;
+          pixels[i] = Math.max(0, Math.min(255, r));
+          pixels[i + 1] = Math.max(0, Math.min(255, g));
+          pixels[i + 2] = Math.max(0, Math.min(255, b));
+        }
+        ctx.putImageData(data, 0, 0);
+        cropDataURL = canvas.toDataURL('image/png', 1.0);
+        srcImage = new Image();
+        srcImage.onload = () => {
+          chipImageState.textContent = `Enhanced ${srcImage.naturalWidth}×${srcImage.naturalHeight}`;
+          chipImageState.style.color = '#27ae60';
+        };
+        srcImage.src = cropDataURL;
+        if (cropper) cropper.replace(cropDataURL);
+        notify('Auto enhance applied', 'success');
+      };
+      img.src = cropDataURL || srcImage.src;
+    });
+
+    /* ========== THREE.JS SCENE SETUP ========== */
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvas3d,
+      antialias: true,
+      preserveDrawingBuffer: true
+    });
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    renderer.setClearColor(0x05070b, 1);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x05070b);
+
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 5000);
+    camera.position.set(0, 140, 280);
+
+    const orbit = new THREE.OrbitControls(camera, canvas3d);
+    orbit.enableDamping = true;
+    orbit.dampingFactor = 0.08;
+    orbit.target.set(0, 70, 0);
+
+    const transform = new THREE.TransformControls(camera, renderer.domElement);
+    scene.add(transform);
+    transform.addEventListener('dragging-changed', (e) => {
+      orbit.enabled = !e.value;
+    });
+
+    // Lights
+    const ambient = new THREE.AmbientLight(0xffffff, parseFloat(ambientIntensityInput.value));
+    scene.add(ambient);
+
+    const dir = new THREE.DirectionalLight(0xffffff, parseFloat(keyLightIntensityInput.value));
+    dir.position.set(260, 320, 220);
+    dir.castShadow = true;
+    dir.shadow.bias = -0.0001;
+    dir.shadow.mapSize.set(2048, 2048);
+    scene.add(dir);
+
+    // Backlight plane
+    const backlightMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+    const backlightPlane = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), backlightMat);
+    backlightPlane.position.set(0, 200, -400);
+    scene.add(backlightPlane);
+
+    const floor = new THREE.Mesh(
+      new THREE.PlaneGeometry(2000, 2000),
+      new THREE.MeshPhongMaterial({ color: 0x050608, shininess: 5 })
+    );
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = 0;
+    floor.receiveShadow = true;
+    scene.add(floor);
+
+    const grid = new THREE.GridHelper(600, 30, 0x333333, 0x555555);
+    grid.position.y = 0.001;
+    scene.add(grid);
+
+    const lithoGroup = new THREE.Group();
+    scene.add(lithoGroup);
+
+    function resizeRendererByPreviewSize() {
+      const rect = previewPanel.getBoundingClientRect();
+      const headerHeight = $('preview-header').getBoundingClientRect().height;
+      const height = rect.height - headerHeight;
+      renderer.setSize(rect.width, height);
+      camera.aspect = rect.width / height;
+      camera.updateProjectionMatrix();
+    }
+    window.addEventListener('resize', resizeRendererByPreviewSize);
+    resizeRendererByPreviewSize();
+
+    // Camera presets
+    function setCamPreset(type) {
+      const box = new THREE.Box3().setFromObject(lithoGroup);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      const radius = Math.max(size.x, size.y, size.z) || 150;
+      if (type === 'front') {
+        camera.position.set(0, radius * 0.6, radius * 1.6);
+      } else if (type === 'iso') {
+        camera.position.set(radius * 1.2, radius * 0.7, radius * 1.3);
+      } else if (type === 'top') {
+        camera.position.set(0, radius * 1.8, 0.01);
+      }
+      orbit.target.copy(center);
+      orbit.update();
+    }
+
+    document.querySelectorAll('.cam-preset').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mode = btn.dataset.cam;
+        if (mode) setCamPreset(mode);
+        if (mode === undefined && btn === btnFullscreen) {
+          // handled separately
+        }
+      });
+    });
+
+    btnResetCamera.addEventListener('click', () => {
+      camera.position.set(0, 140, 280);
+      orbit.target.set(0, 70, 0);
+      orbit.update();
+    });
+
+    // Fullscreen toggle
+    btnFullscreen.addEventListener('click', () => {
+      document.documentElement.classList.toggle('fullscreen-active');
+      resizeRendererByPreviewSize();
+      orbit.update();
+    });
+
+    // Preview size select
+    previewSizeSel.addEventListener('change', () => {
+      const val = previewSizeSel.value;
+      if (val === 's') {
+        previewPanel.style.minHeight = '260px';
+      } else if (val === 'm') {
+        previewPanel.style.minHeight = '340px';
+      } else {
+        previewPanel.style.minHeight = '460px';
+      }
+      resizeRendererByPreviewSize();
+    });
+
+    // FPS tracking + spin
+    let lastTime = performance.now();
+    let frameCount = 0;
+    let fpsTimer = 0;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (spinEnabled && lithoGroup.children.length) {
+        lithoGroup.rotation.y += 0.005;
+      }
+      orbit.update();
+      renderer.render(scene, camera);
+
+      const now = performance.now();
+      const dt = now - lastTime;
+      lastTime = now;
+      frameCount++;
+      fpsTimer += dt;
+      if (fpsTimer >= 1000) {
+        fpsLabel.textContent = Math.round(frameCount * 1000 / fpsTimer);
+        fpsTimer = 0;
+        frameCount = 0;
+      }
+    }
+    animate();
+
+    function clearGroup(g) {
+      while (g.children.length) {
+        const child = g.children.pop();
+        if (child.geometry) child.geometry.dispose();
+        if (child.material) {
+          if (Array.isArray(child.material)) child.material.forEach(m => m.dispose());
+          else child.material.dispose();
+        }
+      }
+      supportOverlay = null;
+    }
+
+    /* ========== HISTORY / UNDO / TIMELINE ========== */
+    let history = [];
+    let redoStack = [];
+    let preGesture = null;
+    let timelineIndex = -1;
+
+    function captureState(obj, label='Change') {
+      if (!obj) return;
+      const entry = {
+        matrix: obj.matrix.clone(),
+        label,
+        time: new Date()
+      };
+      history.push(entry);
+      if (history.length > 100) history.shift();
+      redoStack = [];
+      timelineIndex = history.length - 1;
+      renderTimeline();
+    }
+
+    function applyHistoryIndex(idx) {
+      const obj = transform.object;
+      if (!obj || idx < 0 || idx >= history.length) return;
+      const entry = history[idx];
+      obj.matrix.copy(entry.matrix);
+      obj.matrix.decompose(obj.position, obj.quaternion, obj.scale);
+      timelineIndex = idx;
+      renderTimeline();
+    }
+
+    function renderTimeline() {
+      timelineEl.innerHTML = '';
+      history.forEach((h, i) => {
+        const item = document.createElement('div');
+        item.className = 'timeline-item' + (i === timelineIndex ? ' active' : '');
+        const dot = document.createElement('span');
+        dot.className = 'dot';
+        const label = document.createElement('span');
+        const t = h.time;
+        label.textContent = `${i.toString().padStart(2,'0')} • ${t.getHours().toString().padStart(2,'0')}:${t.getMinutes().toString().padStart(2,'0')} • ${h.label}`;
+        item.appendChild(dot);
+        item.appendChild(label);
+        item.addEventListener('click', () => applyHistoryIndex(i));
+        timelineEl.appendChild(item);
+      });
+    }
+
+    window.addEventListener('keydown', (e) => {
+      const obj = transform.object;
+      if (e.key.toLowerCase() === 'w') { transform.setMode('translate'); setActiveToolButton(toolTranslate); }
+      if (e.key.toLowerCase() === 'e') { transform.setMode('scale'); setActiveToolButton(toolScale); }
+      if (e.key.toLowerCase() === 'r') { transform.setMode('rotate'); setActiveToolButton(toolRotate); }
+
+      if (obj) {
+        if (e.ctrlKey && e.key.toLowerCase() === 'z' && history.length > 1) {
+          redoStack.push(history.pop());
+          const prev = history[history.length - 1];
+          obj.matrix.copy(prev.matrix);
+          obj.matrix.decompose(obj.position, obj.quaternion, obj.scale);
+          timelineIndex = history.length - 1;
+          renderTimeline();
+        }
+        if (e.ctrlKey && e.key.toLowerCase() === 'y' && redoStack.length) {
+          const m = redoStack.pop();
+          history.push(m);
+          obj.matrix.copy(m.matrix);
+          obj.matrix.decompose(obj.position, obj.quaternion, obj.scale);
+          timelineIndex = history.length - 1;
+          renderTimeline();
+        }
+        if (e.key.toLowerCase() === 'd') {
+          const box = new THREE.Box3().setFromObject(obj);
+          obj.position.y -= box.min.y;
+          obj.updateMatrixWorld(true);
+          notify('Dropped to floor', 'info');
+          captureState(obj, 'Drop to floor');
+        }
+      }
+    });
+
+    transform.addEventListener('mouseDown', () => {
+      if (transform.object) preGesture = transform.object.matrix.clone();
+    });
+    transform.addEventListener('mouseUp', () => {
+      if (transform.object) {
+        if (preGesture) history.push({ matrix: preGesture, label:'Transform', time:new Date() });
+        history.push({ matrix: transform.object.matrix.clone(), label:'Transform', time:new Date() });
+        preGesture = null;
+        timelineIndex = history.length - 1;
+        renderTimeline();
+      }
+    });
+
+    // click select
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    canvas3d.addEventListener('pointerdown', (e) => {
+      const rect = canvas3d.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(lithoGroup.children, true);
+      if (intersects.length) {
+        let obj = intersects[0].object;
+        while (obj.parent && obj.parent !== lithoGroup && obj.parent !== scene) {
+          obj = obj.parent;
+        }
+        transform.attach(obj);
+        captureState(obj, 'Select');
+      }
+    });
+
+    btnDropToFloor.addEventListener('click', () => {
+      const obj = transform.object;
+      if (!obj) return notify('No object selected', 'error');
+      const box = new THREE.Box3().setFromObject(obj);
+      obj.position.y -= box.min.y;
+      obj.updateMatrixWorld(true);
+      notify('Dropped to floor', 'success');
+      captureState(obj, 'Drop to floor');
+    });
+
+    /* ========== HEIGHTMAP GENERATION ========== */
+    function blurHeightmap(values, w, h, radius) {
+      if (!radius || radius <= 0) return values;
+      const r = Math.floor(radius);
+      const out = new Float32Array(values.length);
+
+      // horizontal pass
+      const tmp = new Float32Array(values.length);
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          let sum = 0, count = 0;
+          for (let k = -r; k <= r; k++) {
+            const xx = x + k;
+            if (xx >= 0 && xx < w) {
+              sum += values[y * w + xx];
+              count++;
+            }
+          }
+          tmp[y * w + x] = sum / count;
+        }
+      }
+      // vertical pass
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          let sum = 0, count = 0;
+          for (let k = -r; k <= r; k++) {
+            const yy = y + k;
+            if (yy >= 0 && yy < h) {
+              sum += tmp[yy * w + x];
+              count++;
+            }
+          }
+          out[y * w + x] = sum / count;
+        }
+      }
+      return out;
+    }
+
+    async function buildHeightmap(imgURL) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          const Wmm = parseFloat(mmW.value) || 120;
+          const Hmm = parseFloat(mmH.value) || 90;
+          const PPM = Math.max(1, parseFloat(ppm.value) || 2);
+
+          const pxW = Math.floor(Wmm * PPM);
+          const pxH = Math.floor(Hmm * PPM);
+          const c = document.createElement('canvas');
+          c.width = pxW;
+          c.height = pxH;
+          const ctx = c.getContext('2d', { willReadFrequently: true });
+          ctx.drawImage(img, 0, 0, pxW, pxH);
+          const rgba = ctx.getImageData(0, 0, pxW, pxH).data;
+
+          const g = new Float32Array(pxW * pxH);
+          const gammaVal = parseFloat(gammaInput.value) || 1.0;
+          const invertFlag = invert.checked;
+          const flipFlag = flipY.checked;
+
+          for (let iy = 0; iy < pxH; iy++) {
+            const sy = flipFlag ? (pxH - 1 - iy) : iy;
+            for (let ix = 0; ix < pxW; ix++) {
+              const sx = ix;
+              const srcIndex = (sy * pxW + sx) * 4;
+              const dstIndex = iy * pxW + ix;
+              let v = 0.2126 * rgba[srcIndex] + 0.7152 * rgba[srcIndex + 1] + 0.0722 * rgba[srcIndex + 2];
+              v /= 255;
+              v = Math.pow(v, gammaVal);
+              if (invertFlag) v = 1 - v;
+              g[dstIndex] = v;
+            }
+          }
+
+          // normalize
+          let minV = 1, maxV = 0;
+          for (let i = 0; i < g.length; i++) {
+            if (g[i] < minV) minV = g[i];
+            if (g[i] > maxV) maxV = g[i];
+          }
+          const span = Math.max(1e-6, maxV - minV);
+          for (let i = 0; i < g.length; i++) {
+            g[i] = (g[i] - minV) / span;
+          }
+
+          const blurR = parseInt(blurRadius.value) || 0;
+          const blurred = blurHeightmap(g, pxW, pxH, blurR);
+
+          lastHeightData = {
+            width: pxW,
+            height: pxH,
+            values: Array.from(blurred)
+          };
+
+          resolve({ width: pxW, height: pxH, values: blurred, Wmm, Hmm });
+        };
+        img.onerror = reject;
+        img.src = imgURL;
+      });
+    }
+
+    /* ========== GEOMETRY BUILDERS ========== */
+    function buildBasePanelGeometry(heightmap, Wmm, Hmm, tMinV, tMaxV) {
+      const { width: pxW, height: pxH, values: g } = heightmap;
+      const geoFront = new THREE.PlaneGeometry(Wmm, Hmm, pxW - 1, pxH - 1);
+      const posFront = geoFront.attributes.position;
+      const depth = tMaxV - tMinV;
+      for (let iy = 0; iy < pxH; iy++) {
+        for (let ix = 0; ix < pxW; ix++) {
+          const idx = iy * pxW + ix;
+          const z = (1 - g[idx]) * depth + 0.001; // raised from base
+          posFront.setZ(idx, z);
+        }
+      }
+      posFront.needsUpdate = true;
+      geoFront.computeVertexNormals();
+
+      // Back flat plate at tMin
+      const geoBack = new THREE.PlaneGeometry(Wmm, Hmm);
+      geoBack.rotateY(Math.PI);
+      geoBack.translate(0, 0, tMinV);
+
+      const g1 = geoFront.toNonIndexed();
+      const g2 = geoBack.toNonIndexed();
+      let mergedGeo = THREE.BufferGeometryUtils.mergeBufferGeometries([g1, g2], false);
+      return mergedGeo;
+    }
+
+    function applyCylinderWrap(geometry, radius, arcFraction = 1.0) {
+      const pos = geometry.attributes.position;
+      const v = new THREE.Vector3();
+      const box = new THREE.Box3().setFromBufferAttribute(pos);
+      const size = box.getSize(new THREE.Vector3());
+      const Wmm = size.x;
+      const totalArc = 2 * Math.PI * arcFraction;
+      for (let i = 0; i < pos.count; i++) {
+        v.fromBufferAttribute(pos, i);
+        const u = (v.x - box.min.x) / Wmm; // 0..1
+        const angle = -totalArc * (u - 0.5); // center front
+        const r = radius + v.z;
+        const nx = Math.sin(angle) * r;
+        const nz = Math.cos(angle) * r - radius;
+        pos.setXYZ(i, nx, v.y, nz);
+      }
+      pos.needsUpdate = true;
+      geometry.computeVertexNormals();
+      return geometry;
+    }
+
+    function applyWave(geometry, amplitude) {
+      if (!amplitude || amplitude <= 0) return geometry;
+      const pos = geometry.attributes.position;
+      const v = new THREE.Vector3();
+      const box = new THREE.Box3().setFromBufferAttribute(pos);
+      const size = box.getSize(new THREE.Vector3());
+      for (let i = 0; i < pos.count; i++) {
+        v.fromBufferAttribute(pos, i);
+        const u = (v.x - box.min.x) / size.x;
+        const wave = Math.sin(u * Math.PI * 2) * amplitude;
+        pos.setZ(i, v.z + wave);
+      }
+      pos.needsUpdate = true;
+      geometry.computeVertexNormals();
+      return geometry;
+    }
+
+    function addFlatBorder(geometry, Wmm, Hmm, BW, BH) {
+      if (BW <= 0 || BH <= 0) return geometry;
+      const outerW = Wmm + 2 * BW;
+      const outerH = Hmm + 2 * BW;
+      const shape = new THREE.Shape();
+      shape.moveTo(-outerW / 2, -outerH / 2);
+      shape.lineTo(outerW / 2, -outerH / 2);
+      shape.lineTo(outerW / 2, outerH / 2);
+      shape.lineTo(-outerW / 2, outerH / 2);
+      shape.lineTo(-outerW / 2, -outerH / 2);
+
+      const hole = new THREE.Path();
+      hole.moveTo(-Wmm / 2, -Hmm / 2);
+      hole.lineTo(Wmm / 2, -Hmm / 2);
+      hole.lineTo(Wmm / 2, Hmm / 2);
+      hole.lineTo(-Wmm / 2, Hmm / 2);
+      hole.lineTo(-Wmm / 2, -Hmm / 2);
+      shape.holes.push(hole);
+
+      const extrude = new THREE.ExtrudeGeometry(shape, {
+        steps: 1,
+        depth: BH,
+        bevelEnabled: false
+      });
+      extrude.translate(0, 0, -0.001);
+
+      const mg = THREE.BufferGeometryUtils.mergeBufferGeometries(
+        [geometry.toNonIndexed(), extrude.toNonIndexed()],
+        false
+      );
+      return mg;
+    }
+
+    function addStandGeometry(baseGeometry, Wmm, standDepthV, standThickV) {
+      const box = new THREE.Box3().setFromBufferAttribute(baseGeometry.attributes.position);
+      const size = box.getSize(new THREE.Vector3());
+      const minY = box.min.y;
+      const width = Wmm;
+      const depth = standDepthV;
+      const height = standThickV;
+      const shape = new THREE.Shape();
+      shape.moveTo(-width / 2, 0);
+      shape.lineTo(width / 2, 0);
+      shape.lineTo(width / 2, height);
+      shape.lineTo(-width / 2, height);
+      shape.lineTo(-width / 2, 0);
+      const standGeo = new THREE.ExtrudeGeometry(shape, {
+        depth: depth,
+        bevelEnabled: false
+      });
+      // place stand behind lithophane
+      standGeo.rotateX(-Math.PI / 2);
+      standGeo.translate(0, minY + height * 0.5, -depth * 0.6);
+
+      const mg = THREE.BufferGeometryUtils.mergeBufferGeometries(
+        [baseGeometry.toNonIndexed(), standGeo.toNonIndexed()],
+        false
+      );
+      return mg;
+    }
+
+    function addRibsGeometry(baseGeometry, Wmm, Hmm, ribSpacingV) {
+      const box = new THREE.Box3().setFromBufferAttribute(baseGeometry.attributes.position);
+      const size = box.getSize(new THREE.Vector3());
+      const minY = box.min.y;
+      const maxZ = box.max.z;
+      const ribDepth = size.z * 0.5;
+      const ribThick = 1.4;
+
+      const geos = [baseGeometry.toNonIndexed()];
+      const count = Math.max(1, Math.floor(Wmm / ribSpacingV));
+      for (let i = 0; i <= count; i++) {
+        const x = -Wmm / 2 + (i / count) * Wmm;
+        const rib = new THREE.BoxGeometry(ribThick, Hmm, ribDepth);
+        rib.translate(x, minY + Hmm / 2, maxZ - ribDepth / 2);
+        geos.push(rib.toNonIndexed());
+      }
+
+      const mg = THREE.BufferGeometryUtils.mergeBufferGeometries(geos, false);
+      return mg;
+    }
+
+    function buildDomeGeometry(heightmap, Wmm, Hmm, tMinV, tMaxV) {
+      const { width: pxW, height: pxH, values: g } = heightmap;
+      const radius = Math.max(Wmm, Hmm) / 2;
+      const geo = new THREE.BufferGeometry();
+      const verts = [];
+      const indices = [];
+
+      const depth = tMaxV - tMinV;
+
+      for (let y = 0; y < pxH; y++) {
+        for (let x = 0; x < pxW; x++) {
+          const u = x / (pxW - 1);    // 0..1
+          const v = y / (pxH - 1);    // 0..1
+          const px = (u - 0.5) * 2 * radius;
+          const py = (v - 0.5) * 2 * radius;
+          const rr = Math.sqrt(px * px + py * py);
+          const theta = rr === 0 ? 0 : Math.acos(Math.max(-1, Math.min(1, (radius - rr) / radius)));
+          const domeR = radius;
+          const dz = Math.cos(theta) * domeR;
+          const scale = rr === 0 ? 0 : Math.sin(theta) * domeR / rr;
+          const dx = px * scale;
+          const dy = py * scale;
+
+          const hVal = g[y * pxW + x]; // 0..1
+          const thickness = (1 - hVal) * depth + tMinV;
+
+          verts.push(dx, dy, dz + thickness);
+        }
+      }
+
+      for (let y = 0; y < pxH - 1; y++) {
+        for (let x = 0; x < pxW - 1; x++) {
+          const i0 = y * pxW + x;
+          const i1 = i0 + 1;
+          const i2 = i0 + pxW;
+          const i3 = i2 + 1;
+          indices.push(i0, i2, i1);
+          indices.push(i1, i2, i3);
+        }
+      }
+
+      const posAttr = new THREE.Float32BufferAttribute(verts, 3);
+      geo.setAttribute('position', posAttr);
+      geo.setIndex(indices);
+      geo.computeVertexNormals();
+
+      return geo;
+    }
+
+    function buildBoxLampGeometry(panelGeometry, Wmm, Hmm, tMinV) {
+      const mat = new THREE.Matrix4();
+      const geos = [];
+
+      const panel = panelGeometry.toNonIndexed();
+      const box = new THREE.Box3().setFromBufferAttribute(panel.attributes.position);
+      const center = box.getCenter(new THREE.Vector3());
+      panel.translate(-center.x, -center.y, -center.z);
+
+      const depth = tMinV * 0.7 + 0.8;
+
+      // front
+      const front = panel.clone();
+      front.translate(0, 0, depth);
+      geos.push(front);
+
+      // right
+      const right = panel.clone();
+      mat.makeRotationY(-Math.PI / 2);
+      right.applyMatrix4(mat);
+      right.translate(depth, 0, 0);
+      geos.push(right);
+
+      // back
+      const back = panel.clone();
+      mat.makeRotationY(Math.PI);
+      back.applyMatrix4(mat);
+      back.translate(0, 0, -depth);
+      geos.push(back);
+
+      // left
+      const left = panel.clone();
+      mat.makeRotationY(Math.PI / 2);
+      left.applyMatrix4(mat);
+      left.translate(-depth, 0, 0);
+      geos.push(left);
+
+      const mg = THREE.BufferGeometryUtils.mergeBufferGeometries(geos, false);
+      return mg;
+    }
+
+    /* ========== MATERIAL PRESETS ========== */
+    function createMaterial(presetKey) {
+      currentMaterialPreset = presetKey;
+      switch (presetKey) {
+        case 'pla-translucent':
+          return new THREE.MeshPhysicalMaterial({
+            color: 0xffffff,
+            roughness: 0.25,
+            metalness: 0,
+            transmission: 0.8,
+            thickness: 2,
+            clearcoat: 0.2
+          });
+        case 'resin':
+          return new THREE.MeshPhysicalMaterial({
+            color: 0xf5f5ff,
+            roughness: 0.2,
+            metalness: 0.1,
+            transmission: 0.5,
+            thickness: 3,
+            clearcoat: 0.4
+          });
+        case 'glow':
+          return new THREE.MeshStandardMaterial({
+            color: 0xffffc0,
+            emissive: 0x999900,
+            emissiveIntensity: 0.6,
+            roughness: 0.45,
+            metalness: 0.05
+          });
+        case 'pla-white':
+        default:
+          return new THREE.MeshStandardMaterial({
+            color: 0xfff8e8,
+            roughness: 0.55,
+            metalness: 0.05
+          });
+      }
+    }
+
+    /* ========== MAIN BUILD PIPELINE (fixed shape switching) ========== */
+    async function buildLithophaneMesh() {
+      const srcURL = cropDataURL || (srcImage && srcImage.src);
+      if (!srcURL) {
+        notify('Select an image first', 'error');
+        throw new Error('No image');
+      }
+
+      previewStatus.textContent = 'Building heightmap…';
+
+      const { width, height, values, Wmm, Hmm } = await buildHeightmap(srcURL);
+
+      const tMinV = Math.max(0.1, parseFloat(tMin.value) || 0.8);
+      const tMaxVraw = parseFloat(tMax.value) || 3.2;
+      const tMaxV = Math.max(tMinV + 0.2, tMaxVraw);
+      tMax.value = tMaxV.toFixed(1);
+
+      const heightmap = { width, height, values };
+
+      let geo;
+
+      if (shapeType.value !== "dome") {
+        geo = buildBasePanelGeometry(heightmap, Wmm, Hmm, tMinV, tMaxV);
+
+        if (shapeType.value === "cylinder") {
+          const radiusVal = Math.max(1, parseFloat(radiusInput.value) || 60);
+          applyCylinderWrap(geo, radiusVal, 1.0);
+        }
+
+        if (shapeType.value === "arc-cylinder") {
+          const radiusVal = Math.max(1, parseFloat(radiusInput.value) || 60);
+          const angleDeg = parseFloat(arcAngleInput.value) || 180;
+          const fract = Math.max(0.1, Math.min(1.0, angleDeg / 360));
+          applyCylinderWrap(geo, radiusVal, fract);
+        }
+
+        if (shapeType.value === "wave") {
+          const amp = parseFloat(waveAmpInput.value) || 0;
+          applyWave(geo, amp);
+        }
+
+        const BW = parseFloat(bWidth.value) || 0;
+        const BH = parseFloat(bHeight.value) || 0;
+        if (BW > 0 && BH > 0) {
+          geo = addFlatBorder(geo, Wmm, Hmm, BW, BH);
+        }
+
+        if (addStand.checked) {
+          geo = addStandGeometry(
+            geo,
+            Wmm,
+            parseFloat(standDepth.value) || 20,
+            parseFloat(standThick.value) || 4
+          );
+        }
+
+        if (addRibs.checked) {
+          geo = addRibsGeometry(
+            geo,
+            Wmm,
+            Hmm,
+            parseFloat(ribSpacing.value) || 20
+          );
+        }
+
+        if (shapeType.value === "box-lamp") {
+          geo = buildBoxLampGeometry(geo, Wmm, Hmm, tMinV);
+        }
+      }
+
+      if (shapeType.value === "dome") {
+        geo = buildDomeGeometry(heightmap, Wmm, Hmm, tMinV, tMaxV);
+      }
+
+      const mat = createMaterial(currentMaterialPreset);
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.castShadow = true;
+      mesh.receiveShadow = false;
+
+      const box = new THREE.Box3().setFromObject(mesh);
+      mesh.position.y -= box.min.y;
+
+      return { mesh, box, Wmm, Hmm, tMinV, tMaxV };
+    }
+
+    /* ========== PREVIEW BUTTON HANDLER ========== */
+    btnPreview.addEventListener('click', async () => {
+      const srcURL = cropDataURL || (srcImage && srcImage.src);
+      if (!srcURL) return notify('Select an image first', 'error');
+      previewStatus.textContent = 'Building preview…';
+      overlayInfo.textContent = 'Building…';
+      chipMeshState.textContent = 'Building…';
+      chipMeshState.style.color = '#f1c40f';
+
+      try {
+        const { mesh, box, Wmm, Hmm } = await buildLithophaneMesh();
+        clearGroup(lithoGroup);
+        lithoGroup.rotation.set(0,0,0);
+        lithoGroup.add(mesh);
+        transform.attach(mesh);
+        mesh.updateMatrix();
+        captureState(mesh, 'Preview');
+
+        const size = new THREE.Vector3();
+        box.getSize(size);
+        const volume = size.x * size.y * size.z / 1000; // mm³ to cm³
+        mVol.textContent = volume.toFixed(2);
+        mMass.textContent = (volume * 1.24).toFixed(2);
+        const tris = mesh.geometry ? mesh.geometry.attributes.position.count / 3 : 0;
+        mTris.textContent = Math.round(tris).toLocaleString();
+        mDensity.textContent = `${(tris / (size.x * size.y || 1)).toFixed(1)} tris/mm²`;
+
+        chipMeshState.textContent = 'Preview ready';
+        chipMeshState.style.color = '#2ecc71';
+        previewStatus.textContent = 'Preview ready';
+        overlayInfo.textContent = `W ${Wmm.toFixed(1)} mm × H ${Hmm.toFixed(1)} mm`;
+        btnExport.disabled = false;
+        btnHeightmap.disabled = false;
+
+        setCamPreset('iso');
+
+        if (supportPreview.checked) {
+          generateSupportOverlay(mesh);
+        } else {
+          if (supportOverlay) {
+            lithoGroup.remove(supportOverlay);
+            supportOverlay = null;
+          }
+          supportInfo.textContent = 'Toggle support preview to estimate overhang areas.';
+        }
+
+        notify('Preview ready', 'success');
+      } catch (err) {
+        console.error(err);
+        notify('Preview failed', 'error');
+        previewStatus.textContent = 'Error';
+        chipMeshState.textContent = 'Error';
+        chipMeshState.style.color = '#e74c3c';
+      }
+    });
+
+    /* ========== SUPPORT PREVIEW (simple heuristic) ========== */
+    function generateSupportOverlay(mesh) {
+      if (!mesh.geometry) return;
+      const geo = mesh.geometry.clone();
+      geo.computeVertexNormals();
+      const pos = geo.attributes.position.array;
+      const norm = geo.attributes.normal.array;
+      let overhangCount = 0;
+      let totalCount = pos.length / 9; // 3 verts per tri
+
+      const colors = new Float32Array(pos.length);
+      for (let i = 0; i < pos.length; i += 9) {
+        const nx = norm[i];
+        const ny = norm[i+1];
+        const nz = norm[i+2];
+        const angle = Math.acos(Math.abs(ny)); // normal vs up
+        // flag if angle > 60° from vertical (overhang threshold)
+        const needSupport = angle > Math.PI / 3;
+        const c = needSupport ? [1,0.2,0.2] : [0.3,0.3,0.3];
+        if (needSupport) overhangCount++;
+        for (let k=0;k<3;k++) {
+          colors[i + k*3] = c[0];
+          colors[i + k*3 + 1] = c[1];
+          colors[i + k*3 + 2] = c[2];
+        }
+      }
+      geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      const mat = new THREE.MeshBasicMaterial({
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.5,
+        depthWrite: false
+      });
+      if (supportOverlay) {
+        lithoGroup.remove(supportOverlay);
+        supportOverlay.geometry.dispose();
+        supportOverlay.material.dispose();
+      }
+      supportOverlay = new THREE.Mesh(geo, mat);
+      supportOverlay.position.copy(mesh.position);
+      supportOverlay.rotation.copy(mesh.rotation);
+      supportOverlay.scale.copy(mesh.scale);
+      lithoGroup.add(supportOverlay);
+
+      const pct = (overhangCount / totalCount) * 100;
+      supportInfo.textContent = `Approx. ${pct.toFixed(1)}% of faces may need supports. Red = overhangs.`;
+    }
+
+    supportPreview.addEventListener('change', () => {
+      const mesh = lithoGroup.children.find(c => c.isMesh);
+      if (!mesh) return;
+      if (supportPreview.checked) generateSupportOverlay(mesh);
+      else {
+        if (supportOverlay) {
+          lithoGroup.remove(supportOverlay);
+          supportOverlay.geometry.dispose();
+          supportOverlay.material.dispose();
+          supportOverlay = null;
+        }
+        supportInfo.textContent = 'Toggle support preview to estimate overhang areas.';
+      }
+    });
+
+    /* ========== EXPORTS ========== */
+    btnExport.addEventListener('click', async () => {
+      const srcURL = cropDataURL || (srcImage && srcImage.src);
+      if (!srcURL) return notify('Select an image first', 'error');
+      previewStatus.textContent = 'Building STL…';
+      notify('Building STL…', 'info');
+      try {
+        const { mesh } = await buildLithophaneMesh();
+        if (transform.object) {
+          mesh.position.copy(transform.object.position);
+          mesh.quaternion.copy(transform.object.quaternion);
+          mesh.scale.copy(transform.object.scale);
+        }
+        const exporter = new THREE.STLExporter();
+        const stl = exporter.parse(mesh);
+        const blob = new Blob([stl], { type: 'application/sla' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `litho_${Date.now()}.stl`;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+        notify('STL downloaded', 'success');
+        previewStatus.textContent = 'STL exported';
+      } catch (err) {
+        console.error(err);
+        notify('Export failed', 'error');
+        previewStatus.textContent = 'Error';
+      }
+    });
+
+    btnHeightmap.addEventListener('click', () => {
+      if (!lastHeightData) return notify('Generate a preview first', 'error');
+      const { width, height, values } = lastHeightData;
+      const c = document.createElement('canvas');
+      c.width = width;
+      c.height = height;
+      const ctx = c.getContext('2d');
+      const imgData = ctx.createImageData(width, height);
+      const data = imgData.data;
+      for (let i = 0; i < values.length; i++) {
+        const gray = Math.max(0, Math.min(255, Math.round((1 - values[i]) * 255)));
+        const p = i * 4;
+        data[p] = gray;
+        data[p + 1] = gray;
+        data[p + 2] = gray;
+        data[p + 3] = 255;
+      }
+      ctx.putImageData(imgData, 0, 0);
+      c.toBlob(blob => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `litho_heightmap_${Date.now()}.png`;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+      }, 'image/png');
+      notify('Heightmap downloaded', 'success');
+    });
+
+    // Screenshot export
+    toolScreenshot.addEventListener('click', () => {
+      renderer.render(scene, camera);
+      const dataURL = renderer.domElement.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = dataURL;
+      a.download = `litho_preview_${Date.now()}.png`;
+      a.click();
+      notify('Screenshot downloaded', 'success');
+    });
+
+    // Auto-orient for printing: rotate main mesh to lie flat (panel facing up)
+    toolAutoOrient.addEventListener('click', () => {
+      const mesh = lithoGroup.children.find(c => c.isMesh);
+      if (!mesh) return notify('No mesh to orient', 'error');
+      mesh.rotation.set(-Math.PI/2, 0, 0);
+      mesh.updateMatrixWorld(true);
+      const box = new THREE.Box3().setFromObject(mesh);
+      mesh.position.y -= box.min.y;
+      mesh.updateMatrixWorld(true);
+      notify('Auto-oriented for printing (lying flat).', 'success');
+      captureState(mesh, 'Auto orient');
+    });
+
+    /* ========== TEXT TOOLS ========== */
+    const fontLoader = new THREE.FontLoader();
+    let defaultFont = null;
+    fontLoader.load(
+      'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json',
+      f => { defaultFont = f; },
+      undefined,
+      () => console.warn('Font load failed')
+    );
+
+    btnAddText.addEventListener('click', () => {
+      if (!defaultFont) return notify('Font still loading, try again', 'error');
+      const label = prompt('Text to add:', 'Litho3D');
+      if (!label) return;
+      const sizeMm = Math.max(10, parseFloat(mmH.value) || 90) / 8;
+      const textGeo = new THREE.TextGeometry(label, {
+        font: defaultFont,
+        size: sizeMm,
+        height: 2,
+        curveSegments: 4,
+        bevelEnabled: false
+      });
+      textGeo.computeBoundingBox();
+      textGeo.center();
+      const textMat = new THREE.MeshPhongMaterial({ color: 0xffffff });
+      const textMesh = new THREE.Mesh(textGeo, textMat);
+      textMesh.castShadow = true;
+      textMesh.position.set(0, sizeMm, 20);
+      lithoGroup.add(textMesh);
+      transform.attach(textMesh);
+      captureState(textMesh, 'Add text');
+      notify('Text added. Use W/E/R or toolbar to transform.', 'success');
+    });
+
+    btnCenterLitho.addEventListener('click', () => {
+      const obj = lithoGroup.children.find(c => c.isMesh);
+      if (!obj) return;
+      obj.position.set(0, 0, 0);
+      const box = new THREE.Box3().setFromObject(obj);
+      obj.position.y -= box.min.y;
+      obj.updateMatrixWorld(true);
+      transform.attach(obj);
+      captureState(obj, 'Center');
+      notify('Lithophane centered.', 'success');
+    });
+
+    /* ========== LIGHTING CONTROLS ========== */
+    keyLightIntensityInput.addEventListener('input', () => {
+      dir.intensity = parseFloat(keyLightIntensityInput.value);
+    });
+    ambientIntensityInput.addEventListener('input', () => {
+      ambient.intensity = parseFloat(ambientIntensityInput.value);
+    });
+    backlightIntensityInput.addEventListener('input', () => {
+      backlightMat.color.set(backlightColorInput.value);
+      backlightMat.color.multiplyScalar(parseFloat(backlightIntensityInput.value));
+    });
+    backlightColorInput.addEventListener('input', () => {
+      backlightMat.color.set(backlightColorInput.value);
+      backlightMat.color.multiplyScalar(parseFloat(backlightIntensityInput.value));
+    });
+    shadowModeInput.addEventListener('change', () => {
+      const enabled = shadowModeInput.checked;
+      dir.castShadow = enabled;
+      floor.receiveShadow = enabled;
+      notify(enabled ? 'Shadow mode enabled' : 'Shadow mode disabled', 'info');
+    });
+
+    materialPreset.addEventListener('change', () => {
+      currentMaterialPreset = materialPreset.value;
+      const mesh = lithoGroup.children.find(c => c.isMesh);
+      if (mesh) {
+        const newMat = createMaterial(currentMaterialPreset);
+        mesh.material.dispose();
+        mesh.material = newMat;
+      }
+    });
+
+    /* ========== CAD TOOLBAR MODES ========== */
+    function setActiveToolButton(btn) {
+      [toolSelect, toolTranslate, toolRotate, toolScale].forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+    }
+
+    toolTranslate.addEventListener('click', () => {
+      transform.setMode('translate');
+      setActiveToolButton(toolTranslate);
+    });
+    toolRotate.addEventListener('click', () => {
+      transform.setMode('rotate');
+      setActiveToolButton(toolRotate);
+    });
+    toolScale.addEventListener('click', () => {
+      transform.setMode('scale');
+      setActiveToolButton(toolScale);
+    });
+    toolSelect.addEventListener('click', () => {
+      transform.setMode('translate');
+      setActiveToolButton(toolSelect);
+    });
+
+    toolSpin.addEventListener('click', () => {
+      spinEnabled = !spinEnabled;
+      toolSpin.classList.toggle('active', spinEnabled);
+      notify(spinEnabled ? 'Auto-rotation enabled' : 'Auto-rotation disabled', 'info');
+    });
+
+    /* ========== THEME TOGGLE (dark/light, same palette family) ========== */
+    let themeDark = true;
+    $('btnThemeToggle').addEventListener('click', () => {
+      themeDark = !themeDark;
+      themeToggleBall.style.left = themeDark ? '2px' : '18px';
+      document.body.classList.toggle('light-theme', !themeDark);
+    });
+
+    /* ========== PROJECT SAVE / LOAD ========== */
+    function collectProjectSettings() {
+      return {
+        mmW: mmW.value,
+        mmH: mmH.value,
+        ppm: ppm.value,
+        tMin: tMin.value,
+        tMax: tMax.value,
+        gamma: gammaInput.value,
+        blurRadius: blurRadius.value,
+        invert: invert.checked,
+        flipY: flipY.checked,
+        shapeType: shapeType.value,
+        radius: radiusInput.value,
+        arcAngle: arcAngleInput.value,
+        waveAmp: waveAmpInput.value,
+        bWidth: bWidth.value,
+        bHeight: bHeight.value,
+        addStand: addStand.checked,
+        standDepth: standDepth.value,
+        standThick: standThick.value,
+        addRibs: addRibs.checked,
+        ribSpacing: ribSpacing.value,
+        supportPreview: supportPreview.checked,
+        materialPreset: materialPreset.value,
+        keyLightIntensity: keyLightIntensityInput.value,
+        ambientIntensity: ambientIntensityInput.value,
+        backlightIntensity: backlightIntensityInput.value,
+        backlightColor: backlightColorInput.value,
+        shadowMode: shadowModeInput.checked,
+        themeDark
+      };
+    }
+
+    function applyProjectSettings(s) {
+      mmW.value = s.mmW;
+      mmH.value = s.mmH;
+      ppm.value = s.ppm;
+      tMin.value = s.tMin;
+      tMax.value = s.tMax;
+      gammaInput.value = s.gamma;
+      blurRadius.value = s.blurRadius;
+      invert.checked = !!s.invert;
+      flipY.checked = !!s.flipY;
+      shapeType.value = s.shapeType;
+      radiusInput.value = s.radius;
+      arcAngleInput.value = s.arcAngle;
+      waveAmpInput.value = s.waveAmp;
+      bWidth.value = s.bWidth;
+      bHeight.value = s.bHeight;
+      addStand.checked = !!s.addStand;
+      standDepth.value = s.standDepth;
+      standThick.value = s.standThick;
+      addRibs.checked = !!s.addRibs;
+      ribSpacing.value = s.ribSpacing;
+      supportPreview.checked = !!s.supportPreview;
+      materialPreset.value = s.materialPreset || 'pla-white';
+      keyLightIntensityInput.value = s.keyLightIntensity;
+      ambientIntensityInput.value = s.ambientIntensity;
+      backlightIntensityInput.value = s.backlightIntensity;
+      backlightColorInput.value = s.backlightColor;
+      shadowModeInput.checked = !!s.shadowMode;
+      themeDark = s.themeDark !== false;
+      document.body.classList.toggle('light-theme', !themeDark);
+      themeToggleBall.style.left = themeDark ? '2px' : '18px';
+
+      dir.intensity = parseFloat(keyLightIntensityInput.value);
+      ambient.intensity = parseFloat(ambientIntensityInput.value);
+      backlightMat.color.set(backlightColorInput.value);
+      backlightMat.color.multiplyScalar(parseFloat(backlightIntensityInput.value));
+      dir.castShadow = shadowModeInput.checked;
+      floor.receiveShadow = shadowModeInput.checked;
+
+      updateShapeThumb();
+    }
+
+    btnSaveProject.addEventListener('click', () => {
+      const settings = collectProjectSettings();
+      const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `litho_project_${Date.now()}.json`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+      notify('Project JSON downloaded (image not included).', 'success');
+    });
+
+    btnLoadProject.addEventListener('click', () => {
+      projectFile.click();
+    });
+    projectFile.addEventListener('change', (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          applyProjectSettings(data);
+          notify('Project settings loaded (don\'t forget to load the image).', 'success');
+        } catch (err) {
+          console.error(err);
+          notify('Invalid project file', 'error');
+        }
+      };
+      reader.readAsText(f);
+    });
+
+  </script>
 </body>
 </html>
