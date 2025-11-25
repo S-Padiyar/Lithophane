@@ -1,20 +1,16 @@
-<!-- sitemap.xml -->
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- Root homepage (adjust domain if needed) -->
   <url>
     <loc>https://litho3d.studio/</loc>
-    <lastmod>2025-11-24</lastmod>
+    <lastmod>2025-11-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  <!-- Store page (for SEO on “Visit Store” button) -->
+
   <url>
     <loc>https://litho3d.studio/store</loc>
-    <lastmod>2025-11-24</lastmod>
+    <lastmod>2025-11-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
