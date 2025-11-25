@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Litho3D | Designer Pro</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+</head>
+<body>
+  <div id="notification" class="notification"></div>
+
+  <header>
+    <nav class="navbar">
+      <div class="logo">
+        <div class="logo-mark"></div>
+        <span>Litho3D | Sunmay Padiyar</span>
+      </div>
+
+      <div class="top-center">
+        <div class="top-chip">
+          <span>Transform</span>
+          <span class="key">W</span>
+          <span class="key">E</span>
+          <span class="key">R</span>
+        </div>
+        <div class="top-chip">
+          <span>Undo</span>
+          <span class="key">Ctrl</span>
+          <span class="key">Z</span>
+        </div>
+        <div class="top-chip">
+          <span>Redo</span>
+          <span class="key">Ctrl</span>
+          <span class="key">Y</span>
+        </div>
+      </div>
+
+      <div class="top-right">
+        <button class="btn-top" onclick="window.open('https://litho3d.store','_blank')">
+          Visit Store
+        </button>
+        <button id="btnResetCamera" class="btn-top" style="background:rgba(0,0,0,0.25);border-radius:999px;padding:0.32rem 0.7rem;">
+          Reset camera
+        </button>
+        <button id="btnThemeToggle" class="btn-top" style="padding:0.15rem 0.5rem;background:transparent;box-shadow:none;">
+          <div class="theme-toggle">
+            <div class="theme-toggle-ball"></div>
+          </div>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <section id="designer">
+    <div class="designer-shell">
+      <div class="designer-top-row">
+        <h2>
+          Designer
+          <span class="sub">Generate pro-grade lithophane STLs in scene mode.</span>
+        </h2>
+      </div>
+
+      <div class="designer-main">
+        <!-- LEFT PANEL -->
+        <div class="panel side-left">
+          <div class="panel-header">
+            <div class="panel-title">
+              <div class="panel-title-dot"></div>
+              <span>Image & heightmap</span>
+            </div>
+            <span id="chipImageState" class="chip-small">No image</span>
+          </div>
+
+          <div class="panel-body">
+            <div class="tabs">
+              <button class="tab-btn active" data-tab="tab-image">Image</button>
+              <button class="tab-btn" data-tab="tab-map">Map</button>
+            </div>
+
+            <div id="tab-image" class="tab-panel active">
+              <div class="field wide">
+                <label for="imgInput">Source image (JPG / PNG). High contrast works best.</label>
+                <input id="imgInput" type="file" accept="image/*" />
+              </div>
+
+              <div class="row">
+                <button id="btnCrop" class="btn" disabled>✂ Crop</button>
+                <button id="btnAuto" class="btn ghost" disabled>✨ Auto enhance</button>
+                <button id="btnReload" class="btn ghost" disabled>⟳ Reload</button>
+              </div>
+
+              <p class="subtle">
+                Tip: drag and drop an image anywhere to load it. Crop centers automatically using the size ratio.
+              </p>
+
+              <hr style="border:0;border-top:1px solid rgba(255,255,255,0.1);margin:8px 0;">
+
+              <div class="field">
+                <label>Width (mm)</label>
+                <input id="mmW" type="number" min="20" max="400" step="1" value="120" />
+              </div>
+              <div class="field">
+                <label>Height (mm)</label>
+                <input id="mmH" type="number" min="20" max="400" step="1" value="90" />
+              </div>
+              <div class="field">
+                <label>Pixels per mm</label>
+                <input id="ppm" type="number" min="1" max="5" step="0.5" value="2" />
+              </div>
+            </div>
+
+            <div id="tab-map" class="tab-panel">
+              <div class="field">
+                <label>Min thickness (mm)</label>
+                <input id="tMin" type="number" min="0.4" max="3" step="0.1" value="0.8" />
+              </div>
+              <div class="field">
+                <label>Max thickness (mm)</label>
+                <input id="tMax" type="number" min="1" max="8" step="0.1" value="3.2" />
+              </div>
+              <div class="field">
+                <label>Gamma</label>
+                <input id="gamma" type="number" min="0.2" max="3" step="0.1" value="1.4" />
+              </div>
+              <div class="field">
+                <label>Blur radius (px)</label>
+                <input id="blurRadius" type="number" min="0" max="4" step="1" value="1" />
+              </div>
+              <div class="field">
+                <label>Invert lights/darks</label>
+                <input id="invert" type="checkbox" />
+              </div>
+              <div class="field">
+                <label>Flip vertically</label>
+                <input id="flipY" type="checkbox" />
+              </div>
+            </div>
+
+            <hr style="border:0;border-top:1px solid rgba(255,255,255,0.1);margin:8px 0;">
+
+            <div class="row">
+              <button id="btnPreview" class="btn full">▶ Generate / update preview</button>
+            </div>
+            <div class="row">
+              <button id="btnNewLitho" class="btn ghost full">➕ Add as new lithophane</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CENTER PREVIEW PANEL -->
+        <div class="panel preview-center">
+          <div class="cad-toolbar">
+            <button id="toolSelect" class="cad-tool-btn active" title="Select">⭘</button>
+            <button id="toolTranslate" class="cad-tool-btn" title="Move (W)">⛶</button>
+            <button id="toolRotate" class="cad-tool-btn" title="Rotate (R)">⟳</button>
+            <button id="toolScale" class="cad-tool-btn" title="Scale (E)">⇲</button>
+            <div class="cad-toolbar-sep"></div>
+            <button id="toolSpin" class="cad-tool-btn" title="Auto spin">⤾</button>
+            <button id="toolScreenshot" class="cad-tool-btn" title="Screenshot">📷</button>
+          </div>
+
+          <div id="preview">
+            <div id="preview-header">
+              <div>
+                <span style="font-size:0.76rem;">3D preview</span>
+                <span id="previewStatus" style="font-size:0.72rem;margin-left:6px;color:var(--text-muted);">Idle</span>
+              </div>
+              <div>
+                <button class="cam-preset" data-cam="front" style="margin-right:4px;">Front</button>
+                <button class="cam-preset" data-cam="iso" style="margin-right:4px;">Iso</button>
+                <button class="cam-preset" data-cam="top" style="margin-right:4px;">Top</button>
+                <button id="btnFullscreen" class="cam-preset">⤢</button>
+              </div>
+            </div>
+            <div id="canvas-wrap">
+              <canvas id="canvas3d"></canvas>
+              <div class="preview-overlay">
+                <div><span id="overlayInfo">No mesh</span></div>
+                <div>Orbit: drag · Zoom: scroll · Pan: Shift + drag</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="panel side-right">
+          <div class="panel-header">
+            <div class="panel-title">
+              <div class="panel-title-dot"></div>
+              <span>Shape, material & scene</span>
+            </div>
+            <span id="chipMeshState" class="chip-small">No mesh</span>
+          </div>
+
+          <div class="panel-body">
+            <div class="tabs">
+              <button class="tab-btn active" data-tab="tab-shape">Shape</button>
+              <button class="tab-btn" data-tab="tab-light">Lighting</button>
+              <button class="tab-btn" data-tab="tab-scene">Scene</button>
+            </div>
+
+            <div id="tab-shape" class="tab-panel active">
+              <div class="shape-row">
+                <div class="field">
+                  <label>Shape</label>
+                  <select id="shapeType">
+                    <option value="flat-rect">Flat rectangle</option>
+                    <option value="cylinder">Cylinder</option>
+                    <option value="arc-cylinder">Arc cylinder</option>
+                    <option value="dome">Sphere / dome</option>
+                    <option value="box-lamp">Box lamp</option>
+                    <option value="heart">Heart</option>
+                    <option value="custom-curve">Custom curve</option>
+                    <option value="stand-arc">Stand-up arc</option>
+                    <option value="wave">Wave</option>
+                  </select>
+                </div>
+                <div class="shape-thumb">
+                  <div id="shapeThumbMini" class="shape-thumb-mini">▭</div>
+                  <div id="shapeThumbTitle" class="shape-thumb-title">Flat rectangle</div>
+                  <div id="shapeThumbDesc">Standard panel for frames and nightlights.</div>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Cylinder radius (mm)</label>
+                <input id="radius" type="number" min="10" max="400" step="1" value="80" />
+              </div>
+              <div class="field">
+                <label>Arc angle (°)</label>
+                <input id="arcAngle" type="number" min="30" max="360" step="5" value="180" />
+              </div>
+              <div class="field">
+                <label>Wave amplitude (mm)</label>
+                <input id="waveAmp" type="number" min="0" max="15" step="0.5" value="4" />
+              </div>
+              <div class="field">
+                <label>Border width (mm)</label>
+                <input id="bWidth" type="number" min="0" max="10" step="0.5" value="2" />
+              </div>
+              <div class="field">
+                <label>Border height (mm)</label>
+                <input id="bHeight" type="number" min="0" max="8" step="0.5" value="2" />
+              </div>
+              <div class="field">
+                <label>Curve strength (custom)</label>
+                <input id="curveStrength" type="number" min="0.5" max="4" step="0.1" value="1.6" />
+              </div>
+
+              <div class="field">
+                <label>Material preset</label>
+                <select id="materialPreset">
+                  <option value="pla-white">PLA white</option>
+                  <option value="pla-translucent">PLA translucent</option>
+                  <option value="resin">Resin</option>
+                  <option value="glow">Glow effect</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="tab-light" class="tab-panel">
+              <div class="field">
+                <label>Key light</label>
+                <input id="keyLightIntensity" type="range" min="0" max="2" step="0.05" value="1.1" />
+              </div>
+              <div class="field">
+                <label>Ambient</label>
+                <input id="ambientIntensity" type="range" min="0" max="1.5" step="0.05" value="0.45" />
+              </div>
+              <div class="field">
+                <label>Backlight</label>
+                <input id="backlightIntensity" type="range" min="0" max="3" step="0.1" value="1.5" />
+              </div>
+              <div class="field">
+                <label>Backlight color</label>
+                <input id="backlightColor" type="color" value="#ffffff" />
+              </div>
+              <div class="field">
+                <label>Shadow mode</label>
+                <input id="shadowMode" type="checkbox" checked />
+              </div>
+              <p class="subtle">Use backlight + shadows to judge how your lithophane reads when lit.</p>
+            </div>
+
+            <div id="tab-scene" class="tab-panel">
+              <div class="row">
+                <button id="btnDropToFloor" class="btn ghost full">▾ Drop selected to floor</button>
+              </div>
+              <div class="row">
+                <button id="btnCenterScene" class="btn ghost full">◎ Center scene</button>
+              </div>
+              <div class="row">
+                <button id="btnUnionAll" class="btn secondary full">⊕ Union all lithophanes</button>
+              </div>
+              <div class="row">
+                <button id="btnClearScene" class="btn ghost full">🗑 Clear scene</button>
+              </div>
+              <p class="subtle">Click lithophanes in the preview to select them. Use W/E/R or the CAD toolbar to move, rotate and scale.</p>
+              <p class="subtle" style="margin-top:6px;">History:</p>
+              <div id="timeline" class="timeline"></div>
+            </div>
+
+            <hr style="border:0;border-top:1px solid rgba(255,255,255,0.1);margin:8px 0;">
+
+            <div class="metrics">
+              <div class="metric">
+                <b>Triangles</b>
+                <span id="mTris" class="value">0</span>
+              </div>
+              <div class="metric">
+                <b>Volume (cm³)</b>
+                <span id="mVol" class="value">0.00</span>
+              </div>
+              <div class="metric">
+                <b>Mass (g)</b>
+                <span id="mMass" class="value">0.00</span>
+              </div>
+              <div class="metric">
+                <b>Mesh density</b>
+                <span id="mDensity" class="value">–</span>
+              </div>
+            </div>
+
+            <div class="row" style="justify-content:space-between;font-size:0.72rem;color:var(--text-muted);">
+              <span>PLA 1.24 g/cm³</span>
+              <span>FPS: <span id="fpsLabel">–</span></span>
+            </div>
+
+            <hr style="border:0;border-top:1px solid rgba(255,255,255,0.1);margin:8px 0;">
+
+            <div class="row">
+              <button id="btnExport" class="btn secondary full" disabled>⬇ Download STL</button>
+              <button id="btnHeightmap" class="btn ghost full" disabled>⬇ Heightmap PNG</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        © 2025 Litho3D. All rights reserved. Built by Sunmay Padiyar.
+      </footer>
+    </div>
+  </section>
+
+  <!-- libs -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/TransformControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/STLExporter.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/BufferGeometryUtils.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
